@@ -163,39 +163,40 @@ def parse_funnel(rows):
 # ── HTML REPLACE ──────────────────────────────────────────────
 
 def replace_js_array(html, const_name, new_js):
-    """Ersetzt 'const NAME = [...];' im HTML."""
+    """Ersetzt 'const NAME = [...];' im HTML.
+
+    Per re.subn — sonst False-Positive-Warnung wenn neue Daten
+    zufällig byte-identisch mit alten sind (Sheet-Stand unverändert).
+    """
     pattern = rf'const {re.escape(const_name)} = \[.*?\];'
-    result = re.sub(pattern, new_js, html, flags=re.DOTALL)
-    if result == html:
-        print(f"WARNUNG: {const_name} nicht gefunden im HTML!", file=sys.stderr)
+    result, n = re.subn(pattern, lambda _: new_js, html, flags=re.DOTALL)
+    if n == 0:
+        print(f"WARNUNG: {const_name} nicht im HTML gefunden!", file=sys.stderr)
     return result
 
 def replace_kpi(html, totals, sync_date, sync_time):
-    """Ersetzt KPI data-count-Werte und Sync-Datum."""
-    kpi_map = [
-        (totals["anrufe"],    "Anrufe heute"),
-        (totals["gespräche"], "Gespräche"),
-        (totals["terminV"],   "Termine vereinbart"),
-        (totals["terminS"],   "Termine stattgef."),
-        (totals["terminG"],   "Termine gehalten"),
-        (totals["vkE"],       "VK erstellt"),
-        (totals["vkG"],       "VK gewonnen"),
+    """Ersetzt KPI data-count-Werte und Sync-Datum.
+
+    Anker ist das eindeutige kpi-label — verhindert, dass non-greedy
+    Matching mehrere Cards verschluckt (siehe alter Bug: gesamter
+    kpi-strip wurde als ein Match gewertet, nur erster data-count ersetzt).
+    """
+    kpi_replacements = [
+        ("Anrufe heute",       totals["anrufe"]),
+        ("Gespräche",          totals["gespräche"]),
+        ("Termine vereinbart", totals["terminV"]),
+        ("Termine stattgef.",  totals["terminS"]),
+        ("Termine gehalten",   totals["terminG"]),
+        ("VK erstellt",        totals["vkE"]),
+        ("VK gewonnen",        totals["vkG"]),
     ]
-
-    def replace_kpi_card(m, idx=[0]):
-        """Ersetzt data-count im jeweiligen KPI-Card sequentiell."""
-        if idx[0] < len(kpi_map):
-            val = kpi_map[idx[0]][0]
-            idx[0] += 1
-            return re.sub(r'data-count="\d+"', f'data-count="{val}"', m.group(0), count=1)
-        return m.group(0)
-
-    idx = [0]
-    html = re.sub(
-        r'<div class="kpi-card"[^>]*>.*?</div>\s*</div>\s*</div>',
-        lambda m: replace_kpi_card(m),
-        html, flags=re.DOTALL
-    )
+    for label, val in kpi_replacements:
+        pattern = (rf'(<div class="kpi-label">{re.escape(label)}</div>\s*'
+                   rf'<div class="kpi-value" data-count=)"\d+"')
+        new_html, n = re.subn(pattern, rf'\g<1>"{val}"', html, count=1)
+        if n == 0:
+            print(f"WARNUNG: KPI-Label '{label}' nicht im HTML gefunden!", file=sys.stderr)
+        html = new_html
 
     # Datum-Badge
     html = re.sub(

@@ -1,23 +1,33 @@
 #!/bin/bash
-# Cron-Erweiterung für vertrieb-125
-# Regeneriert dashboard.html aus Google Sheets und deployed zu Railway.
-# Cron-Eintrag (nach dem bestehenden):
-#   */30 8-17 * * 1-5 /home/bite/Schreibtisch/Vibe\ Coding/Projekte/bite-sales-dashboard/sync.sh >> /var/log/bite-dashboard.log 2>&1
+# Cron-Sync: Google Sheets -> dashboard.html -> GitHub -> Railway
+#
+# Crontab-Eintrag (5 Min Versatz zum Zoho-Sync):
+#   5,35 8-17 * * 1-5 /home/bite/Schreibtisch/Code/00_Projekte/17_Dashboard_sales/sync.sh >> /home/bite/Schreibtisch/Code/00_Projekte/17_Dashboard_sales/logs/cron.log 2>&1
 
-set -e
+set -euo pipefail
+
+# PATH explizit setzen — Cron startet mit minimaler Umgebung,
+# gws (Cargo) und node/npx (NVM) liegen außerhalb von /usr/bin
+export PATH="/home/bite/.cargo/bin:/home/bite/.nvm/versions/node/v22.22.1/bin:/usr/local/bin:/usr/bin:/bin"
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_DIR"
+
+# Lock gegen Überlappen, falls ein Lauf >30 Min braucht
+exec 9>/tmp/bite-dashboard-sync.lock
+flock -n 9 || { echo "$(date '+%F %T') Vorheriger Sync läuft noch — abgebrochen."; exit 0; }
 
 echo "=== $(date '+%Y-%m-%d %H:%M:%S') Dashboard-Sync gestartet ==="
 
 # 1. Daten aus Sheets holen + HTML neu generieren
 python3 generate.py
 
-# 2. Git commit + push
+# 2. Git commit + push (nur wenn dashboard.html sich geändert hat)
 git add dashboard.html
-git diff --cached --quiet && echo "Keine Änderungen, Sync übersprungen." && exit 0
-
+if git diff --cached --quiet; then
+    echo "Keine Änderungen, Sync übersprungen."
+    exit 0
+fi
 git commit -m "Auto-Sync: $(date '+%d.%m.%Y %H:%M')"
 git push origin master
 

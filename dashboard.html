@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BITE Sales Dashboard — 28.04.2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  /* BITE brand colors */
+  --blue:     #3390ff;
+  --blue2:    #65bde6;
+  --blue3:    #286ec5;
+  --blue-d:   rgba(51,144,255,0.10);
+  --blue-grad: linear-gradient(90deg,#3390ff,#65bde6);
+
+  /* surfaces */
+  --bg:       #f2f5f9;
+  --s1:       #ffffff;
+  --s2:       #f5f8fc;
+  --s3:       #eaf0f8;
+  --border:   #dde5ef;
+  --border2:  #c4d2e4;
+
+  /* accent re-maps for backwards-compat */
+  --orange:   #3390ff;
+  --orange2:  #65bde6;
+  --orange-d: rgba(51,144,255,0.10);
+  --cyan:     #286ec5;
+  --cyan-d:   rgba(40,110,197,0.08);
+  --green:    #26a150;
+  --green-d:  rgba(38,161,80,0.10);
+  --red:      #d12626;
+  --red-d:    rgba(209,38,38,0.08);
+  --amber:    #f59e0b;
+  --amber-d:  rgba(245,158,11,0.10);
+  --purple:   #a053e6;
+
+  /* typography */
+  --text:     #191919;
+  --text2:    #4a5f78;
+  --text3:    #9eadc0;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+header {
+  position:sticky; top:0; z-index:100;
+  background:#ffffff;
+  border-bottom:1px solid var(--border);
+  box-shadow:0 2px 12px rgba(51,144,255,0.08);
+  padding:0 28px;
+  display:flex; align-items:center; justify-content:space-between;
+  height:64px;
+}
+.logo {
+  display:flex; align-items:center; gap:12px;
+}
+.logo-mark {
+  width:34px; height:34px;
+  background:var(--blue-grad);
+  border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+  font-family:'Nunito',sans-serif;
+  font-weight:900; font-size:15px; color:#fff; letter-spacing:0;
+}
+.logo-text {
+  font-family:'Nunito',sans-serif;
+  font-size:20px; font-weight:800; letter-spacing:0.5px;
+  color:var(--text);
+}
+.logo-text span { color:var(--blue); }
+.header-meta {
+  display:flex; align-items:center; gap:12px;
+}
+.header-badge {
+  font-family:'Nunito',sans-serif;
+  font-size:12px; font-weight:600; color:var(--text2);
+  background:var(--s2); border:1px solid var(--border);
+  padding:5px 12px; border-radius:20px;
+}
+.sync-dot {
+  display:inline-block;
+  width:7px; height:7px; border-radius:50%;
+  background:var(--green);
+  margin-right:6px;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(38,161,80,0.4);}
+  50%{opacity:.7;box-shadow:0 0 0 4px rgba(38,161,80,0);}
+}
+
+/* ── KPI STRIP ───────────────────────────────────────────── */
+.kpi-strip {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:12px;
+  padding:20px 24px;
+  background:var(--blue-grad);
+  margin-bottom:24px;
+}
+.kpi-card {
+  background:rgba(255,255,255,0.18);
+  backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,0.35);
+  border-radius:12px;
+  padding:16px 18px 14px;
+  cursor:default;
+  transition:background .2s, transform .15s;
+  position:relative;
+  overflow:hidden;
+}
+.kpi-card:hover {
+  background:rgba(255,255,255,0.28);
+  transform:translateY(-1px);
+}
+.kpi-label {
+  font-size:10px; font-weight:700;
+  letter-spacing:1px; text-transform:uppercase;
+  color:rgba(255,255,255,0.8); margin-bottom:8px;
+}
+.kpi-value {
+  font-family:'Nunito',sans-serif;
+  font-size:36px; font-weight:900; line-height:1;
+  color:#ffffff;
+}
+.kpi-sub {
+  font-size:11px; color:rgba(255,255,255,0.65);
+  margin-top:4px; font-family:'Nunito',sans-serif; font-weight:600;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────── */
+.container { max-width:1700px; margin:0 auto; padding:0 24px 40px; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.grid-3 { display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; margin-bottom:16px; }
+.grid-65 { display:grid; grid-template-columns:1.8fr 1fr; gap:16px; margin-bottom:16px; }
+
+/* ── CARD ────────────────────────────────────────────────── */
+.card {
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(51,144,255,0.05);
+}
+.card-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px;
+  border-bottom:1px solid var(--border);
+  background:var(--s2);
+}
+.card-title {
+  font-size:11px; font-weight:700;
+  letter-spacing:1px; text-transform:uppercase;
+  color:var(--text2);
+  display:flex; align-items:center; gap:8px;
+}
+.card-title-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--blue-grad);
+  background:var(--blue);
+}
+.card-body { padding:18px; }
+
+/* ── SECTION HEADER ─────────────────────────────────────── */
+.section-header {
+  display:flex; align-items:center; gap:12px;
+  margin:24px 0 14px;
+}
+.section-title {
+  font-family:'Nunito',sans-serif;
+  font-size:16px; font-weight:800; letter-spacing:0.3px;
+  color:var(--blue3);
+  text-transform:uppercase;
+}
+.section-line {
+  flex:1; height:2px;
+  background:linear-gradient(90deg,var(--border),transparent);
+  border-radius:2px;
+}
+
+/* ── TABLE ───────────────────────────────────────────────── */
+.tbl-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+thead th {
+  padding:9px 12px;
+  text-align:left;
+  font-size:10px; font-weight:700;
+  letter-spacing:0.8px; text-transform:uppercase;
+  color:var(--text3);
+  border-bottom:2px solid var(--border);
+  background:var(--s2);
+  white-space:nowrap;
+  cursor:pointer; user-select:none;
+}
+thead th:hover { color:var(--blue); }
+thead th.sort-asc::after  { content:' ↑'; color:var(--blue); }
+thead th.sort-desc::after { content:' ↓'; color:var(--blue); }
+tbody tr {
+  border-bottom:1px solid var(--border);
+  transition:background .12s;
+}
+tbody tr:hover { background:var(--blue-d); }
+tbody td {
+  padding:7px 12px;
+  color:var(--text);
+  white-space:nowrap;
+}
+tbody td.num {
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px; text-align:right;
+}
+tbody td.zero { color:var(--text3); }
+
+/* team badges */
+.badge {
+  display:inline-block;
+  font-size:9px; font-weight:700;
+  letter-spacing:0.8px; text-transform:uppercase;
+  padding:3px 8px; border-radius:20px;
+}
+.badge-sg          { background:#f0ebff; color:#7c3aed; }
+.badge-oeffentlich { background:#e5f0ff; color:#2563eb; }
+.badge-spanien     { background:#fffbe5; color:#b45309; }
+.badge-privat      { background:#fff0e5; color:#c2410c; }
+.badge-hochschule  { background:#e8f5ee; color:#166534; }
+
+/* bar inside cell */
+.bar-wrap { display:flex; align-items:center; gap:8px; }
+.mini-bar { height:4px; border-radius:2px; background:var(--blue); opacity:0.6; min-width:2px; }
+
+/* ── FILTER TABS ─────────────────────────────────────────── */
+.filter-tabs {
+  display:flex; gap:6px;
+  padding:12px 18px 0;
+  border-bottom:2px solid var(--border);
+  background:var(--s2);
+  flex-wrap:wrap;
+}
+.ftab {
+  font-size:11px; font-weight:700;
+  letter-spacing:.5px; text-transform:uppercase;
+  padding:7px 14px;
+  border:1px solid transparent;
+  border-bottom:2px solid transparent;
+  border-radius:6px 6px 0 0;
+  cursor:pointer;
+  color:var(--text2);
+  background:transparent;
+  transition:all .15s;
+  margin-bottom:-2px;
+}
+.ftab:hover { color:var(--blue); background:rgba(51,144,255,0.06); }
+.ftab.active {
+  color:var(--blue);
+  background:var(--s1);
+  border-color:var(--border);
+  border-bottom-color:var(--s1);
+}
+
+/* ── CHART CONTAINERS ────────────────────────────────────── */
+.chart-wrap { position:relative; }
+
+/* ── CONVERSION CELL ─────────────────────────────────────── */
+.conv-cell {
+  display:flex; align-items:center; gap:6px;
+}
+.conv-bar-outer {
+  width:60px; height:5px;
+  background:var(--s3); border-radius:3px; overflow:hidden;
+}
+.conv-bar-inner {
+  height:100%; border-radius:3px;
+  background:var(--green);
+  transition:width .6s ease;
+}
+.conv-low .conv-bar-inner { background:var(--red); }
+.conv-mid .conv-bar-inner { background:var(--amber); }
+
+/* ── FUNNEL ROW ──────────────────────────────────────────── */
+.funnel-stage {
+  display:flex; align-items:center;
+  padding:6px 0; gap:10px;
+  border-bottom:1px solid var(--border);
+}
+.funnel-label { font-size:11px; color:var(--text2); width:140px; flex-shrink:0; }
+.funnel-bar-outer { flex:1; height:6px; background:var(--s3); border-radius:3px; overflow:hidden; }
+.funnel-bar-inner { height:100%; border-radius:3px; transition:width 1s cubic-bezier(.4,0,.2,1); }
+.funnel-num { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text2); width:50px; text-align:right; flex-shrink:0; }
+
+/* ── DONUT LEGEND ────────────────────────────────────────── */
+.donut-legend { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+.legend-item { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; }
+.legend-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.legend-label { flex:1; color:var(--text2); }
+.legend-val { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text); font-weight:700; }
+.legend-pct { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); width:32px; text-align:right; }
+
+/* ── PERF TABLE COLORS ───────────────────────────────────── */
+.green-text { color:#16a34a; font-weight:700; }
+.red-text   { color:#dc2626; font-weight:700; }
+.amber-text { color:#d97706; font-weight:700; }
+
+/* ── SCROLLBAR ───────────────────────────────────────────── */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:var(--s2); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:#93b4d0; }
+
+/* ── ANIMATE IN ──────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.card { animation:fadeUp .4s ease both; }
+.kpi-card:nth-child(1){animation-delay:.05s}
+.kpi-card:nth-child(2){animation-delay:.1s}
+.kpi-card:nth-child(3){animation-delay:.15s}
+.kpi-card:nth-child(4){animation-delay:.2s}
+.kpi-card:nth-child(5){animation-delay:.25s}
+.kpi-card:nth-child(6){animation-delay:.3s}
+.kpi-card:nth-child(7){animation-delay:.35s}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:1200px){
+  .kpi-strip{grid-template-columns:repeat(4,1fr);}
+  .grid-65,.grid-2{grid-template-columns:1fr;}
+}
+@media(max-width:700px){
+  .kpi-strip{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">B</div>
+    <div class="logo-text">BITE <span>Sales</span> Dashboard</div>
+  </div>
+  <div class="header-meta">
+    <div class="header-badge">28. April 2026</div>
+    <div class="header-badge"><span class="sync-dot"></span>Sync 13:33</div>
+  </div>
+</header>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+  <div class="kpi-card" style="--accent:var(--cyan)">
+    <div class="kpi-label">Anrufe heute</div>
+    <div class="kpi-value" data-count="830">0</div>
+    <div class="kpi-sub">Team gesamt</div>
+  </div>
+  <div class="kpi-card" style="--accent:var(--orange)">
+    <div class="kpi-label">Gespräche</div>
+    <div class="kpi-value" data-count="209">0</div>
+    <div class="kpi-sub">Quote 25,2%</div>
+  </div>
+  <div class="kpi-card" style="--accent:var(--green)">
+    <div class="kpi-label">Termine vereinbart</div>
+    <div class="kpi-value" data-count="16">0</div>
+    <div class="kpi-sub">7,7% der Gespräche</div>
+  </div>
+  <div class="kpi-card" style="--accent:var(--amber)">
+    <div class="kpi-label">Termine stattgef.</div>
+    <div class="kpi-value" data-count="14">0</div>
+    <div class="kpi-sub">heute gehalten</div>
+  </div>
+  <div class="kpi-card" style="--accent:var(--purple)">
+    <div class="kpi-label">Termine gehalten</div>
+    <div class="kpi-value" data-count="14">0</div>
+    <div class="kpi-sub">Webinare / Demo</div>
+  </div>
+  <div class="kpi-card" style="--accent:var(--orange)">
+    <div class="kpi-label">VK erstellt</div>
+    <div class="kpi-value" data-count="2">0</div>
+    <div class="kpi-sub">Verkaufschancen</div>
+  </div>
+  <div class="kpi-card" style="--accent:var(--green)">
+    <div class="kpi-label">VK gewonnen</div>
+    <div class="kpi-value" data-count="0">0</div>
+    <div class="kpi-sub">heute</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ROW 1: Heute table + Team donut -->
+  <div class="section-header">
+    <div class="section-title">Dashboard Heute</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-65">
+    <!-- Today table -->
+    <div class="card" style="animation-delay:.1s">
+      <div class="filter-tabs" id="teamTabs">
+        <button class="ftab active" data-team="alle">Alle</button>
+        <button class="ftab" data-team="S+G">S+G</button>
+        <button class="ftab" data-team="Öffentlich">Öffentlich</button>
+        <button class="ftab" data-team="Privat-Wirtschaft">Privat-Wirtschaft</button>
+        <button class="ftab" data-team="Spanien">Spanien</button>
+        <button class="ftab" data-team="Hochschule">Hochschule</button>
+      </div>
+      <div class="tbl-wrap">
+        <table id="heuteTable">
+          <thead>
+            <tr>
+              <th data-col="name">Mitarbeiter</th>
+              <th data-col="team">Team</th>
+              <th data-col="anrufe" style="text-align:right">Anrufe</th>
+              <th data-col="gespräche" style="text-align:right">Gespräche</th>
+              <th data-col="terminV" style="text-align:right">TV</th>
+              <th data-col="terminS" style="text-align:right">TS</th>
+              <th data-col="terminG" style="text-align:right">TH</th>
+              <th data-col="vkE" style="text-align:right">VK</th>
+            </tr>
+          </thead>
+          <tbody id="heuteTbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Team donut + stats -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card" style="animation-delay:.2s">
+        <div class="card-header">
+          <div class="card-title"><div class="card-title-dot"></div>Anrufe nach Team</div>
+        </div>
+        <div class="card-body">
+          <div class="chart-wrap" style="height:160px">
+            <canvas id="teamDonut"></canvas>
+          </div>
+          <div class="donut-legend" id="donutLegend"></div>
+        </div>
+      </div>
+      <div class="card" style="animation-delay:.25s">
+        <div class="card-header">
+          <div class="card-title"><div class="card-title-dot"></div>Top Anrufer heute</div>
+        </div>
+        <div class="tbl-wrap">
+          <table id="topCallersTable">
+            <thead><tr>
+              <th>Name</th>
+              <th style="text-align:right">Anrufe</th>
+              <th style="text-align:right">Gespräche</th>
+            </tr></thead>
+            <tbody id="topCallersTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Sales Manager performance -->
+  <div class="section-header">
+    <div class="section-title">Sales Manager — Jahresperformance 2026</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-2">
+    <div class="card" style="animation-delay:.15s">
+      <div class="card-header">
+        <div class="card-title"><div class="card-title-dot"></div>Gewonnene Jahreslizenz (€)</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap" style="height:340px">
+          <canvas id="wonChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="animation-delay:.2s">
+      <div class="card-header">
+        <div class="card-title"><div class="card-title-dot"></div>Conversion Rate &amp; Ø Deal</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap" style="height:340px">
+          <canvas id="convChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sales Manager detail table -->
+  <div class="card" style="animation-delay:.2s;margin-bottom:16px;">
+    <div class="card-header">
+      <div class="card-title"><div class="card-title-dot"></div>Sales Manager Detail</div>
+    </div>
+    <div class="tbl-wrap">
+      <table id="smTable">
+        <thead>
+          <tr>
+            <th data-col="name">Name</th>
+            <th data-col="gewonnen" style="text-align:right">Gew. (Anz.)</th>
+            <th data-col="gewonnenEur" style="text-align:right">Gew. (€)</th>
+            <th data-col="verloren" style="text-align:right">Verl.</th>
+            <th data-col="pipelineEur" style="text-align:right">Pipeline (€)</th>
+            <th data-col="avgDeal" style="text-align:right">Ø Deal (€)</th>
+            <th data-col="convRate" style="text-align:right">Conv. Rate</th>
+            <th data-col="timeToConv" style="text-align:right">Ø Tage</th>
+            <th data-col="webinareGesamt" style="text-align:right">Webinare</th>
+          </tr>
+        </thead>
+        <tbody id="smTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ROW 3: Sales Funnel 2026 -->
+  <div class="section-header">
+    <div class="section-title">Sales Funnel 2026 — Top Performer</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="grid-2">
+    <div class="card" style="animation-delay:.1s">
+      <div class="card-header">
+        <div class="card-title"><div class="card-title-dot"></div>ARR gewonnen gesamt (Top 15)</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap" style="height:380px">
+          <canvas id="funnelWonChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="animation-delay:.15s">
+      <div class="card-header">
+        <div class="card-title"><div class="card-title-dot"></div>ARR Pipeline (Top 15)</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap" style="height:380px">
+          <canvas id="funnelPipeChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Funnel Table -->
+  <div class="card" style="animation-delay:.2s;margin-bottom:16px;">
+    <div class="card-header">
+      <div class="card-title"><div class="card-title-dot"></div>Sales Funnel 2026 — Alle Mitarbeiter</div>
+    </div>
+    <div class="tbl-wrap" style="max-height:420px;overflow-y:auto;">
+      <table id="funnelTable">
+        <thead>
+          <tr>
+            <th data-col="name">Anrufer</th>
+            <th data-col="anrufe" style="text-align:right">Anrufe</th>
+            <th data-col="gespräche" style="text-align:right">Gespräche</th>
+            <th data-col="terminV" style="text-align:right">Termine verein.</th>
+            <th data-col="terminS" style="text-align:right">Termine stattgef.</th>
+            <th data-col="pipeline" style="text-align:right">Pipeline (€)</th>
+            <th data-col="gewonnen" style="text-align:right">ARR gewonnen (€)</th>
+          </tr>
+        </thead>
+        <tbody id="funnelTbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ── DATA ────────────────────────────────────────────────────
+
+const heuteData = [
+  {name:"Alexander Glünkin",  team:"Öffentlich",       anrufe:29, gespräche:5,  terminV:1, terminS:1, terminG:0, vkE:0, vkG:0},
+  {name:"Annegret Bieling",   team:"S+G",              anrufe:57, gespräche:15, terminV:1, terminS:1, terminG:0, vkE:0, vkG:0},
+  {name:"Aylin Dursun",       team:"S+G",              anrufe:0,  gespräche:0,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Benjamin König",     team:"Öffentlich",       anrufe:11, gespräche:1,  terminV:0, terminS:1, terminG:2, vkE:0, vkG:0},
+  {name:"Berfin Özdem",       team:"Öffentlich",       anrufe:42, gespräche:9,  terminV:2, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Britta Grimm",       team:"Öffentlich",       anrufe:0,  gespräche:0,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Carla León",         team:"Spanien",          anrufe:22, gespräche:14, terminV:0, terminS:2, terminG:0, vkE:0, vkG:0},
+  {name:"David Palma",        team:"Privat-Wirtschaft",anrufe:6,  gespräche:3,  terminV:0, terminS:0, terminG:2, vkE:1, vkG:0},
+  {name:"Denise Rom",         team:"Privat-Wirtschaft",anrufe:53, gespräche:6,  terminV:2, terminS:1, terminG:0, vkE:0, vkG:0},
+  {name:"Dorothea Rütter",    team:"Hochschule",       anrufe:0,  gespräche:0,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Eda Karaca",         team:"Öffentlich",       anrufe:23, gespräche:5,  terminV:2, terminS:1, terminG:0, vkE:0, vkG:0},
+  {name:"Florian Trucksäß",   team:"S+G",              anrufe:8,  gespräche:2,  terminV:0, terminS:1, terminG:2, vkE:0, vkG:0},
+  {name:"Gessica Gencarelli", team:"S+G",              anrufe:38, gespräche:6,  terminV:1, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Harun Ardak",        team:"Privat-Wirtschaft",anrufe:3,  gespräche:1,  terminV:0, terminS:0, terminG:1, vkE:0, vkG:0},
+  {name:"Inmaculada Ramos Martin",team:"Spanien",      anrufe:2,  gespräche:2,  terminV:0, terminS:1, terminG:1, vkE:0, vkG:0},
+  {name:"Isabell Lobanow",    team:"Öffentlich",       anrufe:65, gespräche:13, terminV:1, terminS:1, terminG:0, vkE:0, vkG:0},
+  {name:"Jasmin Demir",       team:"Privat-Wirtschaft",anrufe:0,  gespräche:0,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Jessica Campa",      team:"Öffentlich",       anrufe:14, gespräche:4,  terminV:0, terminS:0, terminG:1, vkE:0, vkG:0},
+  {name:"Kemal Can Ileri",    team:"Privat-Wirtschaft",anrufe:0,  gespräche:0,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Lidija Kelava",      team:"S+G",              anrufe:48, gespräche:14, terminV:2, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Marco Kremer",       team:"S+G",              anrufe:30, gespräche:8,  terminV:0, terminS:0, terminG:1, vkE:0, vkG:0},
+  {name:"Maria Kählig",       team:"S+G",              anrufe:40, gespräche:12, terminV:1, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Mariona Belisón",    team:"Spanien",          anrufe:0,  gespräche:0,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Murat Bahce",        team:"Privat-Wirtschaft",anrufe:0,  gespräche:0,  terminV:0, terminS:1, terminG:0, vkE:0, vkG:0},
+  {name:"Nicole Bentner",     team:"Öffentlich",       anrufe:0,  gespräche:0,  terminV:1, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Paraskevi Tzakos",   team:"S+G",              anrufe:43, gespräche:8,  terminV:0, terminS:1, terminG:0, vkE:0, vkG:0},
+  {name:"Qendrim Zabelaj",    team:"Privat-Wirtschaft",anrufe:0,  gespräche:0,  terminV:0, terminS:1, terminG:0, vkE:0, vkG:0},
+  {name:"Ramazan Cetin",      team:"Öffentlich",       anrufe:0,  gespräche:0,  terminV:0, terminS:0, terminG:1, vkE:0, vkG:0},
+  {name:"Ramona Cannello",    team:"S+G",              anrufe:45, gespräche:13, terminV:1, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Rebeca Mora",        team:"Spanien",          anrufe:57, gespräche:21, terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Richard Knoke",      team:"S+G",              anrufe:33, gespräche:6,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Rrezarte Hasani",    team:"S+G",              anrufe:43, gespräche:8,  terminV:1, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Sara Winkler",       team:"S+G",              anrufe:28, gespräche:8,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Sergio Fernandez",   team:"Spanien",          anrufe:12, gespräche:4,  terminV:0, terminS:0, terminG:2, vkE:1, vkG:0},
+  {name:"Stephan Müller",     team:"Öffentlich",       anrufe:15, gespräche:5,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Volker Jahn",        team:"S+G",              anrufe:3,  gespräche:2,  terminV:0, terminS:1, terminG:1, vkE:0, vkG:0},
+  {name:"Yasemin Halici",     team:"Privat-Wirtschaft",anrufe:19, gespräche:6,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+  {name:"Zahide Otto",        team:"S+G",              anrufe:41, gespräche:8,  terminV:0, terminS:0, terminG:0, vkE:0, vkG:0},
+];
+
+const salesManagers = [
+  {name:"Benjamin König",          erstellt:33, erstelltEur:112364, gewonnen:31, gewonnenEur:107903, verloren:1,  verlorenEur:4986,   pipeline:4,  pipelineEur:11501,  avgDeal:3481,  convRate:96.9, timeToConv:13.2,  webinareGesamt:50},
+  {name:"David Palma",             erstellt:12, erstelltEur:36485,  gewonnen:11, gewonnenEur:37449,  verloren:5,  verlorenEur:19865,  pipeline:4,  pipelineEur:11221,  avgDeal:3404,  convRate:68.8, timeToConv:55.1,  webinareGesamt:67},
+  {name:"Dorothea Rütter",         erstellt:3,  erstelltEur:39290,  gewonnen:4,  gewonnenEur:76650,  verloren:1,  verlorenEur:2000,   pipeline:2,  pipelineEur:37140,  avgDeal:19163, convRate:80.0, timeToConv:229.3, webinareGesamt:6},
+  {name:"Florian Trucksäß",        erstellt:11, erstelltEur:127675, gewonnen:1,  gewonnenEur:5100,   verloren:9,  verlorenEur:27725,  pipeline:11, pipelineEur:127675, avgDeal:5100,  convRate:10.0, timeToConv:202.0, webinareGesamt:57},
+  {name:"Harun Ardak",             erstellt:16, erstelltEur:141313, gewonnen:7,  gewonnenEur:54653,  verloren:16, verlorenEur:159860, pipeline:9,  pipelineEur:109301, avgDeal:7808,  convRate:30.4, timeToConv:94.3,  webinareGesamt:28},
+  {name:"Inmaculada Ramos Martin", erstellt:20, erstelltEur:61850,  gewonnen:4,  gewonnenEur:5200,   verloren:15, verlorenEur:55600,  pipeline:2,  pipelineEur:2500,   avgDeal:1300,  convRate:21.1, timeToConv:24.8,  webinareGesamt:23},
+  {name:"Jessica Campa",           erstellt:19, erstelltEur:42435,  gewonnen:17, gewonnenEur:37139,  verloren:0,  verlorenEur:0,      pipeline:3,  pipelineEur:7697,   avgDeal:2185,  convRate:100,  timeToConv:8.4,   webinareGesamt:74},
+  {name:"Marco Kremer",            erstellt:24, erstelltEur:116796, gewonnen:8,  gewonnenEur:16980,  verloren:18, verlorenEur:96445,  pipeline:15, pipelineEur:74376,  avgDeal:2123,  convRate:30.8, timeToConv:360.0, webinareGesamt:57},
+  {name:"Nicole Bentner",          erstellt:13, erstelltEur:27709,  gewonnen:11, gewonnenEur:22250,  verloren:2,  verlorenEur:5411,   pipeline:1,  pipelineEur:1356,   avgDeal:2023,  convRate:84.6, timeToConv:12.8,  webinareGesamt:19},
+  {name:"Ramazan Cetin",           erstellt:19, erstelltEur:245517, gewonnen:14, gewonnenEur:126530, verloren:2,  verlorenEur:36884,  pipeline:6,  pipelineEur:111688, avgDeal:9038,  convRate:87.5, timeToConv:25.6,  webinareGesamt:31},
+  {name:"Richard Knoke",           erstellt:28, erstelltEur:290784, gewonnen:3,  gewonnenEur:62650,  verloren:19, verlorenEur:85880,  pipeline:25, pipelineEur:277384, avgDeal:20883, convRate:13.6, timeToConv:321.3, webinareGesamt:62},
+  {name:"Sergio Fernandez",        erstellt:65, erstelltEur:132900, gewonnen:4,  gewonnenEur:6500,   verloren:35, verlorenEur:60750,  pipeline:30, pipelineEur:71850,  avgDeal:1625,  convRate:10.3, timeToConv:43.0,  webinareGesamt:57},
+  {name:"Stephan Müller",          erstellt:0,  erstelltEur:0,      gewonnen:0,  gewonnenEur:0,      verloren:0,  verlorenEur:0,      pipeline:0,  pipelineEur:0,      avgDeal:0,     convRate:0,    timeToConv:0,     webinareGesamt:19},
+  {name:"Volker Jahn",             erstellt:3,  erstelltEur:27050,  gewonnen:6,  gewonnenEur:40500,  verloren:11, verlorenEur:90652,  pipeline:3,  pipelineEur:27050,  avgDeal:6750,  convRate:35.3, timeToConv:552.2, webinareGesamt:48},
+];
+
+const funnelData = [
+  {name:"Adrianna Koray",      anrufe:152,  gespräche:48,   terminV:0,  terminS:0,  pipeline:3437,      gewonnen:9720},
+  {name:"Albonite Bekolli",    anrufe:83,   gespräche:47,   terminV:0,  terminS:0,  pipeline:0,         gewonnen:85346},
+  {name:"Alexa Hohaus",        anrufe:219,  gespräche:99,   terminV:0,  terminS:0,  pipeline:0,         gewonnen:331246},
+  {name:"Alexander Eisele",    anrufe:286,  gespräche:125,  terminV:0,  terminS:0,  pipeline:2375,      gewonnen:26463},
+  {name:"Alexander Glünkin",   anrufe:1411, gespräche:284,  terminV:33, terminS:16, pipeline:100805,    gewonnen:125492},
+  {name:"Annegret Bieling",    anrufe:3282, gespräche:827,  terminV:34, terminS:22, pipeline:43860,     gewonnen:16480},
+  {name:"Antonia Cervone",     anrufe:263,  gespräche:106,  terminV:0,  terminS:0,  pipeline:2760,      gewonnen:1750},
+  {name:"Antonietta B.-M.",    anrufe:3416, gespräche:692,  terminV:0,  terminS:0,  pipeline:0,         gewonnen:0},
+  {name:"Aylin Dursun",        anrufe:1897, gespräche:342,  terminV:23, terminS:15, pipeline:21766,     gewonnen:2550},
+  {name:"Benjamin König",      anrufe:740,  gespräche:223,  terminV:4,  terminS:3,  pipeline:3834,      gewonnen:13020},
+  {name:"Berfin Özdem",        anrufe:2621, gespräche:576,  terminV:53, terminS:35, pipeline:2730,      gewonnen:31600},
+  {name:"Carla León",          anrufe:2695, gespräche:1066, terminV:26, terminS:24, pipeline:15300,     gewonnen:3750},
+  {name:"Carlo Pinto",         anrufe:294,  gespräche:114,  terminV:0,  terminS:0,  pipeline:1750,      gewonnen:8740},
+  {name:"Christina Fox",       anrufe:133,  gespräche:44,   terminV:0,  terminS:0,  pipeline:11500,     gewonnen:900},
+  {name:"Daniel Riegler",      anrufe:102,  gespräche:38,   terminV:0,  terminS:0,  pipeline:5250,      gewonnen:90700},
+  {name:"Daniel Wiedmann",     anrufe:376,  gespräche:163,  terminV:0,  terminS:0,  pipeline:5000,      gewonnen:8526},
+  {name:"Daniela Dreher",      anrufe:42,   gespräche:19,   terminV:0,  terminS:0,  pipeline:975,       gewonnen:0},
+  {name:"David Palma",         anrufe:561,  gespräche:199,  terminV:9,  terminS:7,  pipeline:6110,      gewonnen:8050},
+  {name:"Denise Rom",          anrufe:3479, gespräche:541,  terminV:48, terminS:28, pipeline:2000,      gewonnen:24399},
+  {name:"Dorothea Rütter",     anrufe:1312, gespräche:242,  terminV:7,  terminS:5,  pipeline:37140,     gewonnen:76650},
+  {name:"Eda Karaca",          anrufe:1522, gespräche:351,  terminV:39, terminS:27, pipeline:3766,      gewonnen:50784},
+  {name:"Fabian Geiselmann",   anrufe:232,  gespräche:91,   terminV:0,  terminS:0,  pipeline:0,         gewonnen:450},
+  {name:"Florian Trucksäß",    anrufe:1447, gespräche:353,  terminV:7,  terminS:3,  pipeline:28875,     gewonnen:0},
+  {name:"Gessica Gencarelli",  anrufe:1491, gespräche:357,  terminV:17, terminS:9,  pipeline:11050,     gewonnen:0},
+  {name:"Harun Ardak",         anrufe:477,  gespräche:142,  terminV:5,  terminS:5,  pipeline:4025,      gewonnen:3000},
+  {name:"Inmaculada R.M.",     anrufe:906,  gespräche:452,  terminV:10, terminS:8,  pipeline:2500,      gewonnen:0},
+  {name:"Isabell Lobanow",     anrufe:2000, gespräche:304,  terminV:27, terminS:9,  pipeline:0,         gewonnen:0},
+  {name:"Jessica Campa",       anrufe:1272, gespräche:323,  terminV:2,  terminS:2,  pipeline:4967,      gewonnen:18582},
+  {name:"Kemal Can Ileri",     anrufe:2949, gespräche:624,  terminV:15, terminS:10, pipeline:0,         gewonnen:0},
+  {name:"Lars Frank",          anrufe:133,  gespräche:64,   terminV:0,  terminS:0,  pipeline:34700,     gewonnen:5050},
+  {name:"Lidija Kelava",       anrufe:2349, gespräche:598,  terminV:38, terminS:28, pipeline:115075,    gewonnen:37950},
+  {name:"Marco Kremer",        anrufe:1222, gespräche:447,  terminV:6,  terminS:6,  pipeline:5000,      gewonnen:500},
+  {name:"Mariona Belisón",     anrufe:1295, gespräche:601,  terminV:10, terminS:10, pipeline:2800,      gewonnen:1350},
+  {name:"Matthias Dorsch",     anrufe:420,  gespräche:193,  terminV:0,  terminS:0,  pipeline:820,       gewonnen:18560},
+  {name:"Murat Bahce",         anrufe:985,  gespräche:213,  terminV:6,  terminS:1,  pipeline:0,         gewonnen:0},
+  {name:"Nicole Bentner",      anrufe:688,  gespräche:223,  terminV:16, terminS:14, pipeline:1356,      gewonnen:21197},
+  {name:"Paraskevi Tzakos",    anrufe:2256, gespräche:509,  terminV:23, terminS:18, pipeline:69955,     gewonnen:0},
+  {name:"Ramazan Cetin",       anrufe:602,  gespräche:208,  terminV:1,  terminS:1,  pipeline:14784,     gewonnen:3613},
+  {name:"Ramona Cannello",     anrufe:2730, gespräche:534,  terminV:36, terminS:27, pipeline:184019,    gewonnen:55150},
+  {name:"Raphael Fröhler",     anrufe:61,   gespräche:21,   terminV:0,  terminS:0,  pipeline:7735,      gewonnen:8125},
+  {name:"Rebeca Mora",         anrufe:3984, gespräche:1864, terminV:33, terminS:32, pipeline:61700,     gewonnen:2950},
+  {name:"Richard Knoke",       anrufe:631,  gespräche:207,  terminV:1,  terminS:1,  pipeline:0,         gewonnen:0},
+  {name:"Robin Schwarz",       anrufe:93,   gespräche:36,   terminV:0,  terminS:0,  pipeline:500,       gewonnen:13999},
+  {name:"Sara Winkler",        anrufe:702,  gespräche:211,  terminV:3,  terminS:3,  pipeline:0,         gewonnen:0},
+  {name:"Sergio Fernandez",    anrufe:1451, gespräche:621,  terminV:2,  terminS:2,  pipeline:0,         gewonnen:1400},
+  {name:"Stephan Müller",      anrufe:230,  gespräche:32,   terminV:4,  terminS:2,  pipeline:0,         gewonnen:27058},
+  {name:"Tristan Jurtzig",     anrufe:235,  gespräche:79,   terminV:0,  terminS:0,  pipeline:13990,     gewonnen:28971},
+  {name:"Vanessa Lang",        anrufe:185,  gespräche:64,   terminV:0,  terminS:0,  pipeline:4250,      gewonnen:7540},
+  {name:"Yasemin Halici",      anrufe:1060, gespräche:256,  terminV:27, terminS:19, pipeline:105276,    gewonnen:46135},
+  {name:"Zahide Otto",         anrufe:1158, gespräche:319,  terminV:5,  terminS:1,  pipeline:3750,      gewonnen:0},
+  {name:"Zivan Tesic",         anrufe:313,  gespräche:70,   terminV:0,  terminS:0,  pipeline:0,         gewonnen:0},
+];
+
+// ── HELPERS ─────────────────────────────────────────────────
+
+const fmt = n => n === 0 ? '—' : new Intl.NumberFormat('de-DE').format(n);
+const fmtEur = n => n === 0 ? '—' : new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);
+const fmtPct = n => n === 0 ? '—' : n.toFixed(1).replace('.',',') + ' %';
+
+const teamClass = t => {
+  if(t==='S+G')              return 'badge-sg';
+  if(t==='Öffentlich')       return 'badge-oeffentlich';
+  if(t==='Spanien')          return 'badge-spanien';
+  if(t==='Privat-Wirtschaft')return 'badge-privat';
+  return 'badge-hochschule';
+};
+
+const teamColors = {
+  'S+G':              '#a053e6',
+  'Öffentlich':       '#3390ff',
+  'Spanien':          '#f59e0b',
+  'Privat-Wirtschaft':'#e15554',
+  'Hochschule':       '#26a150',
+};
+
+// ── COUNTER ANIMATION ────────────────────────────────────────
+
+function animateCount(el, target, duration=1200) {
+  const start = performance.now();
+  const update = now => {
+    const p = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(ease * target);
+    if(p < 1) requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+}
+
+document.querySelectorAll('[data-count]').forEach(el => {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ animateCount(el, +el.dataset.count); obs.disconnect(); }});
+  },{threshold:.1});
+  obs.observe(el);
+});
+
+// ── HEUTE TABLE ──────────────────────────────────────────────
+
+let heuteFilter = 'alle';
+let heuteSortCol = 'anrufe', heuteSortDir = -1;
+
+function renderHeuteTable() {
+  const filtered = heuteFilter === 'alle'
+    ? heuteData
+    : heuteData.filter(r => r.team === heuteFilter);
+
+  const maxAnrufe = Math.max(...filtered.map(r => r.anrufe));
+
+  const sorted = [...filtered].sort((a,b) => {
+    const av = a[heuteSortCol], bv = b[heuteSortCol];
+    return typeof av === 'string'
+      ? av.localeCompare(bv) * heuteSortDir
+      : (av - bv) * heuteSortDir;
+  });
+
+  const tbody = document.getElementById('heuteTbody');
+  tbody.innerHTML = sorted.map(r => {
+    const barW = maxAnrufe > 0 ? Math.round((r.anrufe/maxAnrufe)*80) : 0;
+    const isZero = r.anrufe === 0;
+    return `<tr class="${isZero?'opacity-50':''}">
+      <td>${r.name}</td>
+      <td><span class="badge ${teamClass(r.team)}">${r.team}</span></td>
+      <td class="num">
+        <div class="bar-wrap" style="justify-content:flex-end">
+          <span>${r.anrufe||'—'}</span>
+          ${r.anrufe>0?`<div class="mini-bar" style="width:${barW}px"></div>`:''}
+        </div>
+      </td>
+      <td class="num ${r.gespräche===0?'zero':''}">${r.gespräche||'—'}</td>
+      <td class="num ${r.terminV===0?'zero':''}">${r.terminV||'—'}</td>
+      <td class="num ${r.terminS===0?'zero':''}">${r.terminS||'—'}</td>
+      <td class="num ${r.terminG===0?'zero':''}">${r.terminG||'—'}</td>
+      <td class="num ${r.vkE===0?'zero':''}">${r.vkE||'—'}</td>
+    </tr>`;
+  }).join('');
+
+  // update header sort indicator
+  document.querySelectorAll('#heuteTable thead th').forEach(th => {
+    th.classList.remove('sort-asc','sort-desc');
+    if(th.dataset.col === heuteSortCol)
+      th.classList.add(heuteSortDir===1?'sort-asc':'sort-desc');
+  });
+}
+
+document.getElementById('teamTabs').addEventListener('click', e => {
+  const btn = e.target.closest('.ftab');
+  if(!btn) return;
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  heuteFilter = btn.dataset.team;
+  renderHeuteTable();
+});
+
+document.querySelectorAll('#heuteTable thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    if(heuteSortCol === th.dataset.col) heuteSortDir *= -1;
+    else { heuteSortCol = th.dataset.col; heuteSortDir = -1; }
+    renderHeuteTable();
+  });
+});
+
+renderHeuteTable();
+
+// ── DONUT CHART ──────────────────────────────────────────────
+
+const teamTotals = {};
+heuteData.forEach(r => {
+  teamTotals[r.team] = (teamTotals[r.team]||0) + r.anrufe;
+});
+const teamLabels = Object.keys(teamTotals).filter(t=>teamTotals[t]>0);
+const teamValues = teamLabels.map(t=>teamTotals[t]);
+const teamColorsArr = teamLabels.map(t=>teamColors[t]||'#aaa');
+
+new Chart(document.getElementById('teamDonut'), {
+  type:'doughnut',
+  data:{
+    labels:teamLabels,
+    datasets:[{data:teamValues, backgroundColor:teamColorsArr, borderWidth:3, borderColor:'#ffffff', hoverBorderColor:'#f5f8fc'}]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    cutout:'72%',
+    plugins:{legend:{display:false}, tooltip:{
+      callbacks:{label:ctx=>' '+ctx.label+': '+ctx.parsed+' Anrufe'}
+    }}
+  }
+});
+
+const total = teamValues.reduce((a,b)=>a+b,0);
+document.getElementById('donutLegend').innerHTML = teamLabels.map((t,i)=>`
+  <div class="legend-item">
+    <div class="legend-dot" style="background:${teamColorsArr[i]}"></div>
+    <div class="legend-label">${t}</div>
+    <div class="legend-val">${teamValues[i]}</div>
+    <div class="legend-pct">${Math.round(teamValues[i]/total*100)}%</div>
+  </div>`).join('');
+
+// ── TOP CALLERS ───────────────────────────────────────────────
+
+const topCallers = [...heuteData].sort((a,b)=>b.anrufe-a.anrufe).slice(0,8);
+document.getElementById('topCallersTbody').innerHTML = topCallers.map(r=>`
+  <tr>
+    <td>${r.name}</td>
+    <td class="num">${r.anrufe||'—'}</td>
+    <td class="num ${r.gespräche===0?'zero':''}">${r.gespräche||'—'}</td>
+  </tr>`).join('');
+
+// ── WON CHART ────────────────────────────────────────────────
+
+const smSorted = [...salesManagers].sort((a,b)=>b.gewonnenEur-a.gewonnenEur);
+const smNames = smSorted.map(m=>m.name.split(' ')[0]+' '+m.name.split(' ').slice(-1)[0]);
+
+new Chart(document.getElementById('wonChart'),{
+  type:'bar',
+  data:{
+    labels:smNames,
+    datasets:[{
+      label:'Gewonnen (€)',
+      data:smSorted.map(m=>m.gewonnenEur),
+      backgroundColor:smSorted.map(m=>m.gewonnenEur>100000?'rgba(51,144,255,0.90)':m.gewonnenEur>50000?'rgba(51,144,255,0.65)':'rgba(101,189,230,0.55)'),
+      borderRadius:5, borderSkipped:false,
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    indexAxis:'y',
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>` ${fmtEur(ctx.parsed.x)}`}}
+    },
+    scales:{
+      x:{
+        grid:{color:'rgba(0,0,0,0.05)'},
+        ticks:{color:'#9eadc0', font:{family:'JetBrains Mono',size:10},
+          callback:v=>v>=1000?'€'+(v/1000).toFixed(0)+'k':v}
+      },
+      y:{grid:{display:false}, ticks:{color:'#4a5f78', font:{size:11,family:'Nunito',weight:'600'}}}
+    }
+  }
+});
+
+// ── CONV CHART ────────────────────────────────────────────────
+
+const smSortedConv = [...salesManagers].sort((a,b)=>b.convRate-a.convRate);
+const convNames = smSortedConv.map(m=>m.name.split(' ')[0]+' '+m.name.split(' ').slice(-1)[0]);
+
+new Chart(document.getElementById('convChart'),{
+  type:'bar',
+  data:{
+    labels:convNames,
+    datasets:[{
+      label:'Conv. Rate %',
+      data:smSortedConv.map(m=>m.convRate),
+      backgroundColor:smSortedConv.map(m=>
+        m.convRate>=80?'rgba(38,161,80,0.80)':m.convRate>=50?'rgba(245,158,11,0.75)':'rgba(209,38,38,0.65)'
+      ),
+      borderRadius:5, borderSkipped:false,
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    indexAxis:'y',
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x.toFixed(1)} %`}}
+    },
+    scales:{
+      x:{
+        max:100, grid:{color:'rgba(0,0,0,0.05)'},
+        ticks:{color:'#9eadc0', font:{family:'JetBrains Mono',size:10},
+          callback:v=>v+'%'}
+      },
+      y:{grid:{display:false}, ticks:{color:'#4a5f78', font:{size:11,family:'Nunito',weight:'600'}}}
+    }
+  }
+});
+
+// ── SM DETAIL TABLE ───────────────────────────────────────────
+
+let smSortCol='gewonnenEur', smSortDir=-1;
+
+function renderSMTable(){
+  const sorted=[...salesManagers].sort((a,b)=>{
+    const av=a[smSortCol],bv=b[smSortCol];
+    return typeof av==='string'?av.localeCompare(bv)*smSortDir:(av-bv)*smSortDir;
+  });
+  const maxEur=Math.max(...sorted.map(m=>m.gewonnenEur));
+  document.getElementById('smTbody').innerHTML=sorted.map(m=>{
+    const convClass=m.convRate>=80?'green-text':m.convRate>=40?'amber-text':'red-text';
+    const timeClass=m.timeToConv<=20?'green-text':m.timeToConv<=100?'amber-text':'red-text';
+    return `<tr>
+      <td>${m.name}</td>
+      <td class="num">${m.gewonnen}</td>
+      <td class="num">${fmtEur(m.gewonnenEur)}</td>
+      <td class="num ${m.verloren>10?'red-text':''}">${m.verloren}</td>
+      <td class="num">${fmtEur(m.pipelineEur)}</td>
+      <td class="num">${fmtEur(m.avgDeal)}</td>
+      <td class="num">
+        <div class="conv-cell">
+          <div class="conv-bar-outer">
+            <div class="conv-bar-inner ${m.convRate>=80?'':m.convRate>=40?'conv-mid':'conv-low'}" style="width:${m.convRate}%"></div>
+          </div>
+          <span class="${convClass}">${fmtPct(m.convRate)}</span>
+        </div>
+      </td>
+      <td class="num ${timeClass}">${m.timeToConv>0?m.timeToConv.toFixed(1).replace('.',',')+'d':'—'}</td>
+      <td class="num">${m.webinareGesamt}</td>
+    </tr>`;
+  }).join('');
+  document.querySelectorAll('#smTable thead th').forEach(th=>{
+    th.classList.remove('sort-asc','sort-desc');
+    if(th.dataset.col===smSortCol) th.classList.add(smSortDir===1?'sort-asc':'sort-desc');
+  });
+}
+document.querySelectorAll('#smTable thead th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    if(smSortCol===th.dataset.col) smSortDir*=-1;
+    else{smSortCol=th.dataset.col;smSortDir=-1;}
+    renderSMTable();
+  });
+});
+renderSMTable();
+
+// ── FUNNEL CHARTS ─────────────────────────────────────────────
+
+const funnelSortedWon=[...funnelData].sort((a,b)=>b.gewonnen-a.gewonnen).slice(0,15);
+const funnelSortedPipe=[...funnelData].sort((a,b)=>b.pipeline-a.pipeline).slice(0,15);
+
+function funnelNames(arr){return arr.map(f=>f.name);}
+
+const chartScaleOpts = {
+  x:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{color:'#9eadc0',font:{family:'JetBrains Mono',size:10},callback:v=>v>=1000?'€'+(v/1000).toFixed(0)+'k':v}},
+  y:{grid:{display:false},ticks:{color:'#4a5f78',font:{size:11,family:'Nunito',weight:'600'}}}
+};
+
+new Chart(document.getElementById('funnelWonChart'),{
+  type:'bar',
+  data:{
+    labels:funnelNames(funnelSortedWon),
+    datasets:[{
+      label:'ARR gewonnen (€)',
+      data:funnelSortedWon.map(f=>f.gewonnen),
+      backgroundColor:'rgba(51,144,255,0.65)',
+      borderColor:'rgba(51,144,255,1)',
+      borderWidth:1,
+      borderRadius:5,
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${fmtEur(ctx.parsed.x)}`}}},
+    scales:chartScaleOpts
+  }
+});
+
+new Chart(document.getElementById('funnelPipeChart'),{
+  type:'bar',
+  data:{
+    labels:funnelNames(funnelSortedPipe),
+    datasets:[{
+      label:'Pipeline (€)',
+      data:funnelSortedPipe.map(f=>f.pipeline),
+      backgroundColor:'rgba(101,189,230,0.60)',
+      borderColor:'rgba(101,189,230,1)',
+      borderWidth:1,
+      borderRadius:5,
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${fmtEur(ctx.parsed.x)}`}}},
+    scales:chartScaleOpts
+  }
+});
+
+// ── FUNNEL TABLE ──────────────────────────────────────────────
+
+let fSortCol='gewonnen', fSortDir=-1;
+
+function renderFunnelTable(){
+  const sorted=[...funnelData].sort((a,b)=>{
+    const av=a[fSortCol],bv=b[fSortCol];
+    return typeof av==='string'?av.localeCompare(bv)*fSortDir:(av-bv)*fSortDir;
+  });
+  document.getElementById('funnelTbody').innerHTML=sorted.map(f=>`
+    <tr>
+      <td>${f.name}</td>
+      <td class="num ${f.anrufe===0?'zero':''}">${fmt(f.anrufe)}</td>
+      <td class="num ${f.gespräche===0?'zero':''}">${fmt(f.gespräche)}</td>
+      <td class="num ${f.terminV===0?'zero':''}">${f.terminV||'—'}</td>
+      <td class="num ${f.terminS===0?'zero':''}">${f.terminS||'—'}</td>
+      <td class="num ${f.pipeline===0?'zero':''}">${fmtEur(f.pipeline)}</td>
+      <td class="num ${f.gewonnen===0?'zero':f.gewonnen>50000?'green-text':''}">${fmtEur(f.gewonnen)}</td>
+    </tr>`).join('');
+  document.querySelectorAll('#funnelTable thead th').forEach(th=>{
+    th.classList.remove('sort-asc','sort-desc');
+    if(th.dataset.col===fSortCol) th.classList.add(fSortDir===1?'sort-asc':'sort-desc');
+  });
+}
+document.querySelectorAll('#funnelTable thead th').forEach(th=>{
+  th.addEventListener('click',()=>{
+    if(fSortCol===th.dataset.col) fSortDir*=-1;
+    else{fSortCol=th.dataset.col;fSortDir=-1;}
+    renderFunnelTable();
+  });
+});
+renderFunnelTable();
+</script>
+</body>
+</html>

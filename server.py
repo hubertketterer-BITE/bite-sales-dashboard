@@ -1,15 +1,12 @@
 import os
-import json
 import uuid
-import hashlib
 import hmac
 import http.server
 import socketserver
 import urllib.parse
-from pathlib import Path
 
 PORT = int(os.environ.get("PORT", 8080))
-USERS_FILE = Path(__file__).parent / "users.json"
+DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD", "")
 
 # In-memory sessions: token → email
 _sessions: dict = {}
@@ -96,26 +93,10 @@ button:hover{opacity:.88}
 </html>"""
 
 
-def _hash_password(password: str, salt: str = None) -> str:
-    if salt is None:
-        salt = uuid.uuid4().hex
-    dk = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 200_000)
-    return f"{salt}${dk.hex()}"
-
-
-def _verify_password(password: str, stored: str) -> bool:
-    try:
-        salt = stored.split("$", 1)[0]
-        return hmac.compare_digest(_hash_password(password, salt), stored)
-    except Exception:
+def _check_password(password: str) -> bool:
+    if not DASHBOARD_PASSWORD:
         return False
-
-
-def _load_users() -> dict:
-    try:
-        return json.loads(USERS_FILE.read_text())
-    except Exception:
-        return {}
+    return hmac.compare_digest(password, DASHBOARD_PASSWORD)
 
 
 def _get_session_token(headers) -> str:
@@ -190,9 +171,7 @@ class AuthHandler(http.server.SimpleHTTPRequestHandler):
             self._send_login("Nur @b-ite.de E-Mail-Adressen sind erlaubt.")
             return
 
-        users = _load_users()
-        stored = users.get(email)
-        if stored and _verify_password(password, stored):
+        if _check_password(password):
             token = uuid.uuid4().hex
             _sessions[token] = email
             self.send_response(302)

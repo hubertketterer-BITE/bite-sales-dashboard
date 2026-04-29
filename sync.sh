@@ -2,13 +2,13 @@
 # Cron-Sync: Google Sheets -> dashboard.html -> GitHub -> Railway
 #
 # Crontab-Eintrag (5 Min Versatz zum Zoho-Sync):
-#   5,35 8-17 * * 1-5 /home/bite/Schreibtisch/Code/00_Projekte/17_Dashboard_sales/sync.sh >> /home/bite/Schreibtisch/Code/00_Projekte/17_Dashboard_sales/logs/cron.log 2>&1
+#   5,35 8-17 * * 1-5 "/home/bite/Schreibtisch/Vibe Coding/Projekte/bite-sales-dashboard/sync.sh" >> "/home/bite/Schreibtisch/Vibe Coding/Projekte/bite-sales-dashboard/logs/cron.log" 2>&1
 
 set -euo pipefail
 
 # PATH explizit setzen — Cron startet mit minimaler Umgebung,
 # gws (Cargo) und node/npx (NVM) liegen außerhalb von /usr/bin
-export PATH="/home/bite/.cargo/bin:/home/bite/.nvm/versions/node/v22.22.1/bin:/usr/local/bin:/usr/bin:/bin"
+export PATH="/home/bite/.cargo/bin:/home/bite/.nvm/versions/node/v24.15.0/bin:/usr/local/bin:/usr/bin:/bin"
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_DIR"

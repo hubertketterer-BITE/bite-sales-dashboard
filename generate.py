@@ -11,14 +11,19 @@ import sys
 from datetime import datetime
 
 SPREADSHEET_ID = "1q4WPfKUBdXZ8lg7O7liOizBAzXUFC90VMa-n7rAQ8wg"
+# Stammdaten-Sheet (HR/Personal). Tab "2026" Spalte A=Mitarbeiter, Spalte J=Team.
+# Quelle der echten Team-Zuordnung (S+G, Öffentlich, Privat-Wirtschaft, ...) —
+# Dashboard-Sheet liefert nur grobes "Vertrieb"/"Spanien".
+STAMMDATEN_SPREADSHEET_ID = "1xWwTkFQIn-waqI2ceVCU738jHvPf_pFefO6UpdhNhZQ"
+STAMMDATEN_RANGE = "2026!A2:J200"
 DASHBOARD_FILE = "dashboard.html"
 
 # ── SHEET FETCH ──────────────────────────────────────────────
 
-def fetch_sheet(range_name):
+def fetch_sheet(range_name, spreadsheet_id=SPREADSHEET_ID):
     result = subprocess.run(
         ["gws", "sheets", "spreadsheets", "values", "get",
-         "--params", json.dumps({"spreadsheetId": SPREADSHEET_ID, "range": range_name})],
+         "--params", json.dumps({"spreadsheetId": spreadsheet_id, "range": range_name})],
         capture_output=True, text=True
     )
     if result.returncode != 0:
@@ -29,6 +34,25 @@ def fetch_sheet(range_name):
     json_start = raw.find('{')
     data = json.loads(raw[json_start:])
     return data.get("values", [])
+
+def fetch_team_mapping():
+    """Mitarbeiter -> Team aus Stammdaten-Sheet (Tab '2026' Spalte J).
+
+    Hinweis: Im April 2026 wurde im Stammdaten-Sheet eine neue Spalte B
+    (E-Mail) eingefügt — Team rutschte von Spalte I auf J. Falls erneut
+    verschoben wird, hier Index anpassen (TEAM_COL = 9).
+    """
+    NAME_COL, TEAM_COL = 0, 9
+    rows = fetch_sheet(STAMMDATEN_RANGE, spreadsheet_id=STAMMDATEN_SPREADSHEET_ID)
+    mapping = {}
+    for row in rows:
+        if len(row) <= TEAM_COL:
+            continue
+        name = (row[NAME_COL] or "").strip()
+        team = (row[TEAM_COL] or "").strip()
+        if name and team:
+            mapping[name] = team
+    return mapping
 
 # ── PARSER ───────────────────────────────────────────────────
 
@@ -73,11 +97,12 @@ def js_str(s):
 
 # ── PARSE HEUTE ───────────────────────────────────────────────
 
-def parse_heute(rows):
+def parse_heute(rows, team_mapping=None):
     header = rows[0]
     data = []
     totals = {"anrufe": 0, "gespräche": 0, "terminV": 0, "terminS": 0,
               "terminG": 0, "vkE": 0, "vkG": 0}
+    team_mapping = team_mapping or {}
 
     for row in rows[1:]:
         if not row or not row[0]:
@@ -97,7 +122,10 @@ def parse_heute(rows):
         if len(row) < 4:
             continue
 
-        team   = row[2].strip() if len(row) > 2 else ""
+        # Team bevorzugt aus Stammdaten (echte Aufteilung S+G, Öffentlich, ...);
+        # Dashboard-Sheet liefert nur "Vertrieb"/"Spanien" als Fallback.
+        sheet_team = row[2].strip() if len(row) > 2 else ""
+        team = team_mapping.get(name, sheet_team)
         anrufe = p_int(row[3]) if len(row) > 3 else 0
         gesp   = p_int(row[4]) if len(row) > 4 else 0
         tv     = p_int(row[5]) if len(row) > 5 else 0
@@ -227,13 +255,15 @@ def main():
 
     print(f"[{sync_time}] Lade Daten aus Google Sheets...")
 
-    heute_rows  = fetch_sheet("Dashboard heute!A1:J200")
-    sm_rows     = fetch_sheet("all sales manager!A1:O30")
-    funnel_rows = fetch_sheet("Sales Funnel 2026!A1:J200")
+    heute_rows    = fetch_sheet("Dashboard heute!A1:J200")
+    sm_rows       = fetch_sheet("all sales manager!A1:O30")
+    funnel_rows   = fetch_sheet("Sales Funnel 2026!A1:J200")
+    team_mapping  = fetch_team_mapping()
 
-    print("Daten geladen. Generiere dashboard.html...")
+    print(f"Daten geladen ({len(team_mapping)} Mitarbeiter im Team-Mapping). "
+          f"Generiere dashboard.html...")
 
-    heute_js, totals = parse_heute(heute_rows)
+    heute_js, totals = parse_heute(heute_rows, team_mapping)
     sm_js            = parse_sales_managers(sm_rows)
     funnel_js        = parse_funnel(funnel_rows)
 

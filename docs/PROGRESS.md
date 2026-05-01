@@ -1,5 +1,19 @@
 # Progress
 
+## 2026-05-01
+
+### Team-Zuordnung aus Stammdaten-Sheet (Commit `f627e19`)
+
+Im Master-Stammdaten-Sheet (`1xWwTkFQ...` Tab "2026") wurde Spalte B (E-Mail) eingefügt → Team rutschte von Spalte I auf J. Bisher hat `generate.py` die Team-Zuordnung aus dem Dashboard-Sheet gelesen, das aber nur grob "Vertrieb"/"Spanien" liefert. Die feine Aufteilung (S+G, Öffentlich, Privat-Wirtschaft, Hochschule) lebt im Stammdaten-Sheet.
+
+`generate.py` lädt jetzt zusätzlich `1xWwTkFQ...!2026!A:J` und nutzt das Mitarbeiter→Team-Mapping in `parse_heute()`. Spanier behalten "Spanien" via Fallback auf das Dashboard-Sheet, weil sie in den Stammdaten nicht aufgeführt sind.
+
+Damit funktionieren die Filter-Tabs (S+G / Öffentlich / Privat-Wirtschaft / Spanien / Hochschule) im Dashboard wieder.
+
+### Branch-Hygiene
+
+Vor dem Fix hatten lokal und Remote 28/31 divergente Auto-Sync-Commits. `dashboard.html` am HEAD war bit-identisch — Remote hatte aber zusätzlich Auth-Features (`server.py`, `manage_users.py`, `users.json`, neuer `sync.sh`). Lösung: `git reset --hard origin/master` mit Backup-Tag `backup-pre-reset`. Danach Team-Fix sauber on top.
+
 ## 2026-04-28
 
 ### Auto-Sync-Pipeline eingerichtet

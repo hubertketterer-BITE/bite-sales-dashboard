@@ -1,5 +1,20 @@
 # Progress
 
+## 2026-05-04
+
+### Railway-Deploy hing auf Stand 01.05.
+
+Live-Dashboard zeigte morgens noch Daten vom 1. Mai, obwohl Auto-Sync-Commits bis 11:05 Uhr auf Github waren. Ursache: Railway-Service hat **kein** Auto-Deploy bei Git-Push konfiguriert — `npx @railway/cli up --detach` muss explizit laufen. Auto-Sync (`sync.sh`) ruft das nicht auf, nur `git push`.
+
+`last-modified`-Header der Live-URL als Diagnose-Werkzeug:
+```
+curl -sI https://pretty-kindness-production-9a7e.up.railway.app/dashboard.html | grep -i last-modified
+```
+
+**Manueller Fix:** `npx @railway/cli up --detach` ausgeführt. Nach ~90 s Build live, `last-modified: Mon, 04 May 2026 09:05:05 GMT`.
+
+**Offene Frage:** Railway-Projekt mit Github-Repo verknüpfen (Settings → Source → Connect Repo) damit Auto-Deploy on push. Sonst muss `sync.sh` zusätzlich `railway up` triggern.
+
 ## 2026-05-01
 
 ### Team-Zuordnung aus Stammdaten-Sheet (Commit `f627e19`)

@@ -8,7 +8,7 @@ set -euo pipefail
 
 # PATH explizit setzen — Cron startet mit minimaler Umgebung,
 # gws (Cargo) und node/npx (NVM) liegen außerhalb von /usr/bin
-export PATH="/home/bite/.cargo/bin:/home/bite/.nvm/versions/node/v24.15.0/bin:/usr/local/bin:/usr/bin:/bin"
+export PATH="/home/bite/.cargo/bin:/home/bite/.nvm/versions/node/v22.22.1/bin:/usr/local/bin:/usr/bin:/bin"
 
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_DIR"

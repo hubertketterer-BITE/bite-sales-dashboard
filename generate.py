@@ -11,11 +11,26 @@ import sys
 from datetime import datetime
 
 SPREADSHEET_ID = "1q4WPfKUBdXZ8lg7O7liOizBAzXUFC90VMa-n7rAQ8wg"
-# Stammdaten-Sheet (HR/Personal). Tab "2026" Spalte A=Mitarbeiter, Spalte J=Team.
+# Stammdaten-Sheet (HR/Personal). Tab "2026":
+#   A Mitarbeiter | B E-Mail | C PNR | D Geschlecht | E Eintritt | F Austritt
+#   G Wh | H FTE | I Kundenmanagement | J Team
 # Quelle der echten Team-Zuordnung (S+G, Öffentlich, Privat-Wirtschaft, ...) —
 # Dashboard-Sheet liefert nur grobes "Vertrieb"/"Spanien".
+# WICHTIG: Header-Check vor jedem Lauf gegen STAMMDATEN_HEADER_EXPECTED.
+# Bisher 2× passiert (April + Mai 2026), dass eine Spalte eingefügt wurde und
+# das Mapping silent verrutschte → Dashboard zeigte FTE als Bereich.
 STAMMDATEN_SPREADSHEET_ID = "1xWwTkFQIn-waqI2ceVCU738jHvPf_pFefO6UpdhNhZQ"
-STAMMDATEN_RANGE = "2026!A2:J200"
+STAMMDATEN_HEADER_RANGE = "2026!A2:K2"
+STAMMDATEN_DATA_RANGE = "2026!A3:K500"
+STAMMDATEN_HEADER_EXPECTED = {
+    0: "Mitarbeiter",
+    5: "Austritt",
+    8: "Kundenmanagement",
+    9: "Team",
+}
+COL_NAME = 0
+COL_AUSTRITT = 5
+COL_TEAM = 9
 DASHBOARD_FILE = "dashboard.html"
 
 # ── SHEET FETCH ──────────────────────────────────────────────
@@ -35,23 +50,55 @@ def fetch_sheet(range_name, spreadsheet_id=SPREADSHEET_ID):
     data = json.loads(raw[json_start:])
     return data.get("values", [])
 
+def _validiere_stammdaten_header():
+    """Fail-fast wenn Spalten im Stammdaten-Sheet verrutscht sind."""
+    rows = fetch_sheet(STAMMDATEN_HEADER_RANGE, spreadsheet_id=STAMMDATEN_SPREADSHEET_ID)
+    if not rows:
+        print("FEHLER: Stammdaten-Header-Zeile leer", file=sys.stderr)
+        sys.exit(1)
+    header = rows[0]
+    abweichungen = []
+    for idx, expected in STAMMDATEN_HEADER_EXPECTED.items():
+        actual = (header[idx] if idx < len(header) else "").strip()
+        if actual != expected:
+            spalte = chr(ord("A") + idx)
+            abweichungen.append(f"  Spalte {spalte} (Index {idx}): "
+                                f"erwartet '{expected}', gefunden '{actual}'")
+    if abweichungen:
+        print("FEHLER: Stammdaten-Sheet '2026' hat unerwartete Spaltenstruktur.",
+              file=sys.stderr)
+        print("\n".join(abweichungen), file=sys.stderr)
+        print("Header: " + " | ".join(header), file=sys.stderr)
+        print("Fix: STAMMDATEN_HEADER_EXPECTED + COL_* in generate.py anpassen.",
+              file=sys.stderr)
+        sys.exit(1)
+
+
 def fetch_team_mapping():
     """Mitarbeiter -> Team aus Stammdaten-Sheet (Tab '2026' Spalte J).
 
-    Hinweis: Im April 2026 wurde im Stammdaten-Sheet eine neue Spalte B
-    (E-Mail) eingefügt — Team rutschte von Spalte I auf J. Falls erneut
-    verschoben wird, hier Index anpassen (TEAM_COL = 9).
+    Filtert ausgetretene MA (Spalte F = COL_AUSTRITT gefüllt) heraus.
+    Header-Check oben, damit Spaltenverschiebungen nicht silent durchgehen.
     """
-    NAME_COL, TEAM_COL = 0, 9
-    rows = fetch_sheet(STAMMDATEN_RANGE, spreadsheet_id=STAMMDATEN_SPREADSHEET_ID)
+    _validiere_stammdaten_header()
+    rows = fetch_sheet(STAMMDATEN_DATA_RANGE, spreadsheet_id=STAMMDATEN_SPREADSHEET_ID)
     mapping = {}
+    ausgetreten = 0
     for row in rows:
-        if len(row) <= TEAM_COL:
+        if len(row) <= COL_NAME:
             continue
-        name = (row[NAME_COL] or "").strip()
-        team = (row[TEAM_COL] or "").strip()
-        if name and team:
+        name = (row[COL_NAME] or "").strip()
+        if not name:
+            continue
+        austritt = (row[COL_AUSTRITT] if len(row) > COL_AUSTRITT else "").strip()
+        if austritt:
+            ausgetreten += 1
+            continue
+        team = (row[COL_TEAM] if len(row) > COL_TEAM else "").strip()
+        if team:
             mapping[name] = team
+    if ausgetreten:
+        print(f"  Stammdaten: {ausgetreten} ausgetretene MA übersprungen")
     return mapping
 
 # ── PARSER ───────────────────────────────────────────────────

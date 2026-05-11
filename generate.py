@@ -24,11 +24,13 @@ STAMMDATEN_HEADER_RANGE = "2026!A2:K2"
 STAMMDATEN_DATA_RANGE = "2026!A3:K500"
 STAMMDATEN_HEADER_EXPECTED = {
     0: "Mitarbeiter",
+    4: "Eintritt",
     5: "Austritt",
     8: "Kundenmanagement",
     9: "Team",
 }
 COL_NAME = 0
+COL_EINTRITT = 4
 COL_AUSTRITT = 5
 COL_TEAM = 9
 DASHBOARD_FILE = "dashboard.html"
@@ -74,16 +76,30 @@ def _validiere_stammdaten_header():
         sys.exit(1)
 
 
+def _parse_dmy(s: str):
+    """Parst Datum im Stammdaten-Format `DD.MM.YYYY`. Leerer/ungültiger Wert → None."""
+    if not s:
+        return None
+    try:
+        return datetime.strptime(s.strip(), "%d.%m.%Y")
+    except ValueError:
+        return None
+
+
 def fetch_team_mapping():
     """Mitarbeiter -> Team aus Stammdaten-Sheet (Tab '2026' Spalte J).
 
-    Filtert ausgetretene MA (Spalte F = COL_AUSTRITT gefüllt) heraus.
+    Filtert ausgetretene MA (Spalte F gefüllt) und noch nicht eingetretene
+    MA (Spalte E in der Zukunft) heraus — analog `export_dashboard_heute.py`,
+    damit beide Pipelines identische Whitelist nutzen.
     Header-Check oben, damit Spaltenverschiebungen nicht silent durchgehen.
     """
     _validiere_stammdaten_header()
     rows = fetch_sheet(STAMMDATEN_DATA_RANGE, spreadsheet_id=STAMMDATEN_SPREADSHEET_ID)
+    heute = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     mapping = {}
     ausgetreten = 0
+    nicht_eingetreten = 0
     for row in rows:
         if len(row) <= COL_NAME:
             continue
@@ -94,11 +110,17 @@ def fetch_team_mapping():
         if austritt:
             ausgetreten += 1
             continue
+        eintritt_raw = (row[COL_EINTRITT] if len(row) > COL_EINTRITT else "").strip()
+        eintritt_dt = _parse_dmy(eintritt_raw)
+        if eintritt_dt and eintritt_dt > heute:
+            nicht_eingetreten += 1
+            continue
         team = (row[COL_TEAM] if len(row) > COL_TEAM else "").strip()
         if team:
             mapping[name] = team
-    if ausgetreten:
-        print(f"  Stammdaten: {ausgetreten} ausgetretene MA übersprungen")
+    if ausgetreten or nicht_eingetreten:
+        print(f"  Stammdaten: {ausgetreten} ausgetretene, "
+              f"{nicht_eingetreten} zukünftige Eintritte übersprungen")
     return mapping
 
 # ── PARSER ───────────────────────────────────────────────────

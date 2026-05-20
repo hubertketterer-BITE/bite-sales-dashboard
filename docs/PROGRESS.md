@@ -1,5 +1,39 @@
 # Progress
 
+## 2026-05-20
+
+### Railway-OAuth ersetzt durch Project-Token
+
+**Symptom:** Dashboard hing seit 2026-05-19 17:35 auf altem Stand. Cron pushte HTML zu GitHub, scheiterte aber bei `railway up`:
+```
+Warning: failed to refresh OAuth token: Token refresh failed: invalid_grant
+Unauthorized. Please run `railway login` again.
+```
+
+**Ursache:** OAuth-Refresh-Token expired. Headless Cron kann `railway login` nicht ausführen (Browser-OAuth). Erneutes interaktives `railway login` persistiert auch nicht zuverlässig — Callback-Loopback funktionierte nicht.
+
+**Fix:**
+1. Railway Project Settings (NICHT `/account/tokens`) → Tokens → New Token (Environment: production)
+2. Token in `.env` als `RAILWAY_TOKEN=<uuid>` (chmod 600, gitignored)
+3. `sync.sh` sourcet `.env` vor Deploy-Step:
+   ```bash
+   if [ -f "$REPO_DIR/.env" ]; then
+       set -a
+       . "$REPO_DIR/.env"
+       set +a
+   fi
+   ```
+4. CLI nimmt env-var automatisch — kein `railway login` mehr nötig
+
+**Wichtig:** Account-Token aus `https://railway.com/account/tokens` wird vom CLI für `up` abgelehnt. Nur Project-Token funktioniert mit `RAILWAY_TOKEN`.
+
+**Verify nach Setup:** `last-modified`-Header der Live-URL zeigt aktuelles Datum:
+```
+curl -sI https://pretty-kindness-production-9a7e.up.railway.app/dashboard.html | grep -i last-modified
+```
+
+Deploy-Test 09:39 → Build durch 09:42, Dashboard live mit KPIs aus 09:35-Cron (Anrufe=335 Gespräche=89 TV=4 TS=10).
+
 ## 2026-05-04
 
 ### Railway-Deploy hing auf Stand 01.05.

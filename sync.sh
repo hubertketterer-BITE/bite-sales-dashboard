@@ -13,6 +13,14 @@ export PATH="/home/bite/.cargo/bin:/home/bite/.nvm/versions/node/v22.22.1/bin:/u
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_DIR"
 
+# Railway-Token aus .env laden — vermeidet OAuth-Login (läuft im Cron headless)
+if [ -f "$REPO_DIR/.env" ]; then
+    set -a
+    # shellcheck disable=SC1091
+    . "$REPO_DIR/.env"
+    set +a
+fi
+
 # Lock gegen Überlappen, falls ein Lauf >30 Min braucht
 exec 9>/tmp/bite-dashboard-sync.lock
 flock -n 9 || { echo "$(date '+%F %T') Vorheriger Sync läuft noch — abgebrochen."; exit 0; }

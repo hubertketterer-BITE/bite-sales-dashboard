@@ -13,7 +13,7 @@ from datetime import datetime
 SPREADSHEET_ID = "1q4WPfKUBdXZ8lg7O7liOizBAzXUFC90VMa-n7rAQ8wg"
 # Stammdaten-Sheet (HR/Personal). Tab "2026":
 #   A Mitarbeiter | B E-Mail | C PNR | D Geschlecht | E Eintritt | F Austritt
-#   G Wh | H FTE | I Kundenmanagement | J Team
+#   G Wh | H FTE | I Bereich | J Team
 # Quelle der echten Team-Zuordnung (S+G, Öffentlich, Privat-Wirtschaft, ...) —
 # Dashboard-Sheet liefert nur grobes "Vertrieb"/"Spanien".
 # WICHTIG: Header-Check vor jedem Lauf gegen STAMMDATEN_HEADER_EXPECTED.
@@ -26,7 +26,7 @@ STAMMDATEN_HEADER_EXPECTED = {
     0: "Mitarbeiter",
     4: "Eintritt",
     5: "Austritt",
-    8: "Kundenmanagement",
+    8: "Bereich",
     9: "Team",
 }
 COL_NAME = 0

@@ -40,6 +40,6 @@ git commit -m "Auto-Sync: $(date '+%d.%m.%Y %H:%M')"
 git push origin master
 
 # 3. Railway neu deployen
-npx --yes @railway/cli up --detach
+npx --yes @railway/cli up --detach --service pretty-kindness --environment production
 
 echo "=== Sync abgeschlossen ==="

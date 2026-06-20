@@ -1,6 +1,6 @@
 import os
 import uuid
-import hmac
+import bcrypt
 import http.server
 import socketserver
 import urllib.parse
@@ -96,7 +96,10 @@ button:hover{opacity:.88}
 def _check_password(password: str) -> bool:
     if not DASHBOARD_PASSWORD:
         return False
-    return hmac.compare_digest(password, DASHBOARD_PASSWORD)
+    try:
+        return bcrypt.checkpw(password.encode("utf-8"), DASHBOARD_PASSWORD.encode("utf-8"))
+    except Exception:
+        return False
 
 
 def _get_session_token(headers) -> str:

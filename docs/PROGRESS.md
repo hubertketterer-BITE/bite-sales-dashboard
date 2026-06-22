@@ -1,5 +1,30 @@
 # Progress
 
+## 2026-06-22
+
+### Deploy-Crashloop — bcrypt-Dependency fehlte
+
+**Symptom:** Railway-Crash-Mail Mo 22.06 06:05. Container im Restart-Loop, Deploy-Logs:
+```
+Traceback (most recent call last):
+  File "/app/server.py", line 3, in <module>
+    import bcrypt
+ModuleNotFoundError: No module named 'bcrypt'
+```
+
+**Ursache:** Security-Commit `e04e4f1` stellte die Auth von hmac-Plaintext auf `bcrypt.checkpw` um (`DASHBOARD_PASSWORD` jetzt bcrypt-Hash `$2b$12$…`) und force-pushte master — aber `requirements.txt` blieb auf `# Keine externen Pakete nötig`. nixpacks installiert bcrypt nicht → Import crasht beim Start. Rollback unmöglich: ältere Deploys = hmac, können gegen den bcrypt-Hash nicht mehr authentifizieren. Nur Forward-Fix.
+
+**Fix:** `requirements.txt` → `bcrypt>=4.0,<5` (Commit `2c54c63`).
+
+**Deploy + Durability (3 Stellen müssen den Fix haben):**
+1. `railway up --detach` aus lokalem Tree → Sofort-Fix Live
+2. `git push origin master` (rebased auf laufende VPS-Auto-Syncs)
+3. VPS-Repo `root@187.124.25.74:/root/bite-sales-dashboard` → `git rebase origin/master && git push` — sonst re-crasht der nächste Cron-`railway up` aus dem VPS-Tree
+
+**Verify:** Live `/login` = HTTP 200, Deploy-Log `Server läuft auf Port 8080` ohne Traceback, `requirements.txt` auf VPS + origin enthält bcrypt.
+
+**Lesson:** Auth-/Security-Änderungen an `server.py`, die neue Imports einführen, immer mit `requirements.txt`-Update bündeln. Der Deploy lebt an drei Stellen (Live-Container via `railway up`, origin/master, VPS-Repo) — ein Fix muss alle drei erreichen, sonst rollt der VPS-Cron ihn zurück.
+
 ## 2026-05-20
 
 ### Railway-OAuth ersetzt durch Project-Token

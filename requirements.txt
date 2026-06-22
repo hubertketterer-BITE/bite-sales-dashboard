@@ -1,1 +1,2 @@
-# Keine externen Pakete nötig – nur Python-Standardbibliothek
+# bcrypt für Passwort-Hash-Verifikation in server.py (DASHBOARD_PASSWORD = bcrypt-Hash)
+bcrypt>=4.0,<5

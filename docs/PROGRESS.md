@@ -25,6 +25,18 @@ ModuleNotFoundError: No module named 'bcrypt'
 
 **Lesson:** Auth-/Security-Änderungen an `server.py`, die neue Imports einführen, immer mit `requirements.txt`-Update bündeln. Der Deploy lebt an drei Stellen (Live-Container via `railway up`, origin/master, VPS-Repo) — ein Fix muss alle drei erreichen, sonst rollt der VPS-Cron ihn zurück.
 
+### Login-Reset — DASHBOARD_PASSWORD-Hash passte nicht
+
+**Symptom:** Nach dem Deploy-Fix kein Login möglich (`@b-ite.de` + Passwort → "E-Mail oder Passwort falsch").
+
+**Auth-Mechanik (nicht offensichtlich):** `server.py` prüft **nicht** `users.json`. Login = beliebige `@b-ite.de`-Mail + **eine** geteilte `DASHBOARD_PASSWORD` (Railway-Env-Var = bcrypt-Hash), via `bcrypt.checkpw`. `users.json` + `manage_users.py` (pbkdf2) sind **toter Code**.
+
+**Ursache:** Der hinterlegte Hash stammte von einem anderen Passwort (`bcrypt.checkpw` lokal gegen den Env-Hash geprüft → `NO MATCH`). bcrypt = one-way, Klartext nicht rückholbar.
+
+**Fix:** Neuen Hash lokal via `getpass` erzeugt (Passwort nie in Chat/History), Railway-Var per **stdin** gesetzt (`railway variable set DASHBOARD_PASSWORD --stdin` — umgeht `$`-Shell-Problem mit dem `$2b$`-Hash). Var-Change triggert Redeploy. Verifiziert: neuer Hash aktiv, `/login` 200, Browser-Login geht.
+
+**Lesson:** Passwort ändern = nur Railway-Var neu hashen, kein Code-Change. `--set "KEY=$2b$..."` zerbricht am `$` → `--stdin` nutzen. Lange Einzeiler mit `<`/`>`/`!` über das Claude-`!`-Prefix zerhacken beim Paste → in ein Script schreiben.
+
 ## 2026-05-20
 
 ### Railway-OAuth ersetzt durch Project-Token

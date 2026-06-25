@@ -1,5 +1,24 @@
 # Progress
 
+## 2026-06-25
+
+### Live-Dashboard eingefroren — VPS-Push dauerhaft rejected (Deploy-Schicht)
+
+**Symptom:** Railway-Live-Dashboard zeigte veraltete Werte, obwohl Master-Sheet täglich frisch (Team gesamt korrekt befüllt, `Letzter Sync` aktuell). Diagnose via Skill `sales-dashboard-doctor` → Failure Mode #2 (Deploy-Schicht), Variante "push rejected".
+
+**Ursache (Root):** Am 23.06 wurde der Docs-Commit `18cc02c` ("docs(progress): document login reset") **lokal** in `17_Dashboard_sales` committet und auf `origin/master` gepusht — aber Schritt 3 der Deploy-Durability-Checkliste (VPS-Repo rebasen) wurde für diesen Commit übersprungen. `sync.sh` auf dem VPS hat **kein `git pull`/`rebase`** vor dem Push. Damit divergierte das VPS-Repo `/root/bite-sales-dashboard` ab 23.06 dauerhaft von origin:
+
+1. Jeder VPS-Auto-Sync (`5,35 8-17 Mo-Fr`) generierte frisches `dashboard.html` + committete lokal.
+2. `git push origin master` → `! [rejected] master -> master (fetch first)` (origin hatte `18cc02c`, das der VPS nicht hatte).
+3. `set -euo pipefail` → Abbruch **vor** `railway up` → kein Deploy.
+4. 40 ungepushte Auto-Sync-Commits stauten sich auf dem VPS; Live blieb auf dem letzten erfolgreichen Deploy (~23.06) eingefroren.
+
+**Fix:** VPS-Repo auf origin rebased + gepusht (`ssh root@… 'cd /root/bite-sales-dashboard && git fetch origin && git rebase origin/master && git push origin master'`) → `18cc02c..54df4de`, 40 Commits gelandet, `0/0` synced.
+
+**Verify (regulärer Slot, nicht nur Handlauf):** 12:05-Cron `54df4de..0d7aa54 master -> master` (Push OK) → `railway up` (Indexing/Uploading/Build-Logs-URL) → `=== Sync abgeschlossen ===`, `0/0` synced, KPIs Anrufe=562. Live deployt wieder.
+
+**Lesson / strukturelle Wurzel:** `sync.sh` pullt nie → ein einziger Fremd-Push auf origin (z.B. lokaler Docs-/Code-Commit) friert die gesamte Deploy-Kette permanent ein, ohne Self-Heal. Empfehlung: `git pull --rebase origin master` vor dem `git push` in `sync.sh` ergänzen (Deployment-Skript → nur auf Freigabe). Bis dahin gilt die #8-Regel weiter: **jeder** lokale Push auf origin muss von einem VPS-Rebase begleitet werden — auch reine Docs-Commits.
+
 ## 2026-06-22
 
 ### Deploy-Crashloop — bcrypt-Dependency fehlte

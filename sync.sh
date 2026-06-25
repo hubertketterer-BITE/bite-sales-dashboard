@@ -27,6 +27,15 @@ flock -n 9 || { echo "$(date '+%F %T') Vorheriger Sync läuft noch — abgebroch
 
 echo "=== $(date '+%Y-%m-%d %H:%M:%S') Dashboard-Sync gestartet ==="
 
+# 0. Self-heal: stets vom aktuellen origin-Stand bauen.
+# sync.sh pusht ohne vorheriges pull/rebase -> ein einzelner Fremd-Push auf origin
+# (z.B. lokaler Docs-/Code-Commit) wuerde sonst jeden weiteren Auto-Sync-Push
+# permanent rejecten und den Deploy einfrieren (Vorfall 2026-06-25, Live 23.->25.06).
+# dashboard.html wird in Schritt 1 ohnehin komplett neu generiert -> reset --hard
+# ist konfliktfrei und verwirft nur stale Auto-Sync-Commits.
+git fetch origin --quiet
+git reset --hard origin/master
+
 # 1. Daten aus Sheets holen + HTML neu generieren
 python3 generate.py
 

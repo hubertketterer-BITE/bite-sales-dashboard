@@ -3,6 +3,8 @@
 **Erstellt:** 2026-05-29
 **Für:** neue Session, Start im Verzeichnis `00_Projekte/17_Dashboard_sales`
 
+> **Letzter Vorfall (2026-06-25):** Live eingefroren 23.→25.06. VPS-`sync.sh`-Push dauerhaft rejected, weil lokaler Docs-Commit `18cc02c` auf origin gepusht, aber VPS-Repo nicht rebased wurde — `sync.sh` pullt nie. Fix: VPS-Repo `git rebase origin/master && git push`, 12:05-Cron verifiziert (`railway up` lief). Details + offene Hardening-Empfehlung (`git pull --rebase` in `sync.sh`) in `docs/PROGRESS.md` (2026-06-25). Skill `sales-dashboard-doctor` Failure Mode #2.
+
 ## Auftrag der nächsten Session
 
 1. **Debuggen:** https://pretty-kindness-production-9a7e.up.railway.app/dashboard.html — „schon wieder nicht alle Daten aktuell" (wiederkehrend).

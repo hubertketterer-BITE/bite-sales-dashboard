@@ -19,6 +19,14 @@
 
 **Lesson / strukturelle Wurzel:** `sync.sh` pullt nie → ein einziger Fremd-Push auf origin (z.B. lokaler Docs-/Code-Commit) friert die gesamte Deploy-Kette permanent ein, ohne Self-Heal. Empfehlung: `git pull --rebase origin master` vor dem `git push` in `sync.sh` ergänzen (Deployment-Skript → nur auf Freigabe). Bis dahin gilt die #8-Regel weiter: **jeder** lokale Push auf origin muss von einem VPS-Rebase begleitet werden — auch reine Docs-Commits.
 
+### Self-Heal in sync.sh eingebaut (Dauer-Fix)
+
+Auf Freigabe umgesetzt: `git fetch origin && git reset --hard origin/master` vor `generate.py` (Commit `3829904`, gepusht + VPS via `reset --hard origin/master` nachgezogen). `dashboard.html` wird jede Runde neu generiert → `reset --hard` ist konfliktfrei und verwirft nur stale Auto-Sync-Commits. Damit absorbiert jeder Lauf künftige Fremd-Pushes auf origin automatisch statt einzufrieren. Im 13:35-Cron verifiziert (Push `dc32277..5b7cec2` OK, `railway up` lief). Live-Dashboard zeigt wieder frischen Sync (13:35).
+
+### n8n-Watchdog auf Bürozeit Mo–Fr
+
+WF `bimLPuipL2kVJId7` ("⚠️ Watchdog — Sales-Dashboard Frische", liest `Dashboard heute!E2`, Schwelle 90 Min, Gmail-Alarm). Trigger `0,30 9-17 * * 1-5` → `15,45 8-18 * * 1-5` (TZ Europe/Berlin). Zwei Gründe: (1) Fenster an Sync-Window 08:05–17:35 angeglichen; (2) Minuten `:15/:45` statt `:00/:30` → Watchdog liest **nach** dem Master-Sync (`*/30 8-17`), sonst 08:00-Read-before-Write-Race → Montag-Fehlalarm. War zuvor schon bürozeit-begrenzt (9-17 Mo-Fr seit 18.06.), kein Overnight-Alarm — echter Mehrwert = Race-Vermeidung. Live verifiziert (activeVersion `5c37ba61`, Connections intakt).
+
 ## 2026-06-22
 
 ### Deploy-Crashloop — bcrypt-Dependency fehlte

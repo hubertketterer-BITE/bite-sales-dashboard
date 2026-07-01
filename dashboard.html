@@ -353,7 +353,7 @@ tbody td.zero { color:var(--text3); }
   </div>
   <div class="header-meta">
     <div class="header-badge">1. Juli 2026</div>
-    <div class="header-badge"><span class="sync-dot"></span>Sync 15:35</div>
+    <div class="header-badge"><span class="sync-dot"></span>Sync 16:05</div>
   </div>
 </header>
 
@@ -361,12 +361,12 @@ tbody td.zero { color:var(--text3); }
 <div class="kpi-strip">
   <div class="kpi-card" style="--accent:var(--cyan)">
     <div class="kpi-label">Anrufe heute</div>
-    <div class="kpi-value" data-count="900">0</div>
+    <div class="kpi-value" data-count="908">0</div>
     <div class="kpi-sub">Team gesamt</div>
   </div>
   <div class="kpi-card" style="--accent:var(--orange)">
     <div class="kpi-label">Gespräche</div>
-    <div class="kpi-value" data-count="193">0</div>
+    <div class="kpi-value" data-count="196">0</div>
     <div class="kpi-sub">Quote 25,2%</div>
   </div>
   <div class="kpi-card" style="--accent:var(--green)">
@@ -391,7 +391,7 @@ tbody td.zero { color:var(--text3); }
   </div>
   <div class="kpi-card" style="--accent:var(--green)">
     <div class="kpi-label">VK gewonnen</div>
-    <div class="kpi-value" data-count="2">0</div>
+    <div class="kpi-value" data-count="3">0</div>
     <div class="kpi-sub">heute</div>
   </div>
 </div>
@@ -574,11 +574,11 @@ tbody td.zero { color:var(--text3); }
 
 const heuteData = [
   {name:"Alexander Glünkin",team:"Öffentlich",anrufe:4,gespräche:3,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
-  {name:"Annegret Bieling",team:"S+G",anrufe:49,gespräche:3,terminV:0,terminS:2,terminG:0,vkE:0,vkG:0},
-  {name:"Benjamin König",team:"Öffentlich",anrufe:7,gespräche:3,terminV:0,terminS:0,terminG:1,vkE:1,vkG:0},
+  {name:"Annegret Bieling",team:"S+G",anrufe:54,gespräche:4,terminV:0,terminS:2,terminG:0,vkE:0,vkG:0},
+  {name:"Benjamin König",team:"Öffentlich",anrufe:7,gespräche:3,terminV:0,terminS:0,terminG:1,vkE:1,vkG:1},
   {name:"Berfin Özdem",team:"Öffentlich",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Britta Grimm",team:"Öffentlich",anrufe:61,gespräche:4,terminV:0,terminS:1,terminG:0,vkE:0,vkG:0},
-  {name:"Carla León",team:"Spanien",anrufe:22,gespräche:16,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
+  {name:"Carla León",team:"Spanien",anrufe:25,gespräche:18,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"David Palma",team:"Privat-Wirtschaft",anrufe:14,gespräche:4,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Denise Rom",team:"Privat-Wirtschaft",anrufe:49,gespräche:9,terminV:2,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Dorothea Rütter",team:"Hochschule",anrufe:19,gespräche:2,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
@@ -612,7 +612,7 @@ const heuteData = [
 ];
 
 const salesManagers = [
-  {name:"Benjamin König",erstellt:84,erstelltEur:303066,gewonnen:49,gewonnenEur:182257,verloren:15,verlorenEur:59620,pipeline:23,pipelineEur:73215,avgDeal:3720,convRate:76.6,timeToConv:19.3,webinareGehalten:65,webinareFuture:13,webinareGesamt:78},
+  {name:"Benjamin König",erstellt:84,erstelltEur:303066,gewonnen:50,gewonnenEur:185907,verloren:15,verlorenEur:59620,pipeline:22,pipelineEur:69565,avgDeal:3718,convRate:76.9,timeToConv:20.0,webinareGehalten:65,webinareFuture:13,webinareGesamt:78},
   {name:"David Palma",erstellt:33,erstelltEur:109271,gewonnen:15,gewonnenEur:50480,verloren:12,verlorenEur:53075,pipeline:16,pipelineEur:54166,avgDeal:3365,convRate:55.6,timeToConv:40.9,webinareGehalten:69,webinareFuture:14,webinareGesamt:83},
   {name:"Dorothea Rütter",erstellt:6,erstelltEur:123870,gewonnen:5,gewonnenEur:78300,verloren:1,verlorenEur:2000,pipeline:4,pipelineEur:120070,avgDeal:15660,convRate:83.3,timeToConv:197.6,webinareGehalten:8,webinareFuture:2,webinareGesamt:10},
   {name:"Florian Trucksäß",erstellt:21,erstelltEur:220325,gewonnen:6,gewonnenEur:22450,verloren:10,verlorenEur:44975,pipeline:17,pipelineEur:209575,avgDeal:3742,convRate:37.5,timeToConv:104.5,webinareGehalten:68,webinareFuture:11,webinareGesamt:79},
@@ -634,15 +634,15 @@ const funnelData = [
   {name:"Alexa Hohaus",anrufe:298,gespräche:132,terminV:0,terminS:0,pipeline:0,gewonnen:396171},
   {name:"Alexander Eisele",anrufe:288,gespräche:127,terminV:0,terminS:0,pipeline:1750,gewonnen:270875},
   {name:"Alexander Glünkin",anrufe:1808,gespräche:371,terminV:36,terminS:27,pipeline:19019461,gewonnen:24785846},
-  {name:"Annegret Bieling",anrufe:5475,gespräche:1355,terminV:72,terminS:53,pipeline:70410,gewonnen:47816},
+  {name:"Annegret Bieling",anrufe:5480,gespräche:1356,terminV:72,terminS:53,pipeline:70410,gewonnen:47816},
   {name:"Antonia Cervone",anrufe:293,gespräche:115,terminV:0,terminS:0,pipeline:0,gewonnen:3935},
   {name:"Antonietta Bochicchio-Muratore",anrufe:3631,gespräche:721,terminV:0,terminS:0,pipeline:0,gewonnen:0},
   {name:"Aylin Dursun",anrufe:2295,gespräche:389,terminV:22,terminS:17,pipeline:21766,gewonnen:2550},
-  {name:"Benjamin König",anrufe:1080,gespräche:325,terminV:4,terminS:4,pipeline:894155,gewonnen:2194838},
+  {name:"Benjamin König",anrufe:1080,gespräche:325,terminV:4,terminS:4,pipeline:529167,gewonnen:2194838},
   {name:"Berfin Özdem",anrufe:3172,gespräche:717,terminV:59,terminS:54,pipeline:1824539,gewonnen:5947582},
   {name:"Bernice Welens",anrufe:79,gespräche:38,terminV:0,terminS:0,pipeline:0,gewonnen:450},
   {name:"Britta Grimm",anrufe:1489,gespräche:218,terminV:20,terminS:5,pipeline:817651,gewonnen:0},
-  {name:"Carla León",anrufe:4250,gespräche:1887,terminV:33,terminS:32,pipeline:328375,gewonnen:4550},
+  {name:"Carla León",anrufe:4253,gespräche:1889,terminV:33,terminS:32,pipeline:328375,gewonnen:4550},
   {name:"Carlo Pinto",anrufe:424,gespräche:175,terminV:0,terminS:0,pipeline:0,gewonnen:15990},
   {name:"Carsten Hoermann",anrufe:9,gespräche:8,terminV:0,terminS:0,pipeline:0,gewonnen:0},
   {name:"Christina Fox",anrufe:214,gespräche:71,terminV:0,terminS:0,pipeline:7500,gewonnen:4900},
@@ -658,7 +658,7 @@ const funnelData = [
   {name:"Fabian Geiselmann",anrufe:455,gespräche:162,terminV:0,terminS:0,pipeline:2000,gewonnen:3750},
   {name:"Florian Trucksäß",anrufe:2509,gespräche:561,terminV:9,terminS:9,pipeline:18375,gewonnen:0},
   {name:"Florian Wichert",anrufe:1,gespräche:1,terminV:0,terminS:0,pipeline:0,gewonnen:0},
-  {name:"Frank Bündgens",anrufe:232,gespräche:99,terminV:0,terminS:0,pipeline:2950,gewonnen:14595},
+  {name:"Frank Bündgens",anrufe:235,gespräche:99,terminV:0,terminS:0,pipeline:2950,gewonnen:14595},
   {name:"Gessica Gencarelli",anrufe:2422,gespräche:537,terminV:28,terminS:18,pipeline:71600,gewonnen:3850},
   {name:"Harun Ardak",anrufe:787,gespräche:239,terminV:6,terminS:6,pipeline:2386075,gewonnen:3000},
   {name:"Hubert Ketterer",anrufe:61,gespräche:34,terminV:0,terminS:0,pipeline:0,gewonnen:15000},

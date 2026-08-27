@@ -353,7 +353,7 @@ tbody td.zero { color:var(--text3); }
   </div>
   <div class="header-meta">
     <div class="header-badge">27. August 2026</div>
-    <div class="header-badge"><span class="sync-dot"></span>Sync 08:05</div>
+    <div class="header-badge"><span class="sync-dot"></span>Sync 08:35</div>
   </div>
 </header>
 
@@ -361,17 +361,17 @@ tbody td.zero { color:var(--text3); }
 <div class="kpi-strip">
   <div class="kpi-card" style="--accent:var(--cyan)">
     <div class="kpi-label">Anrufe heute</div>
-    <div class="kpi-value" data-count="0">0</div>
+    <div class="kpi-value" data-count="12">0</div>
     <div class="kpi-sub">Team gesamt</div>
   </div>
   <div class="kpi-card" style="--accent:var(--orange)">
     <div class="kpi-label">Gespräche</div>
-    <div class="kpi-value" data-count="0">0</div>
+    <div class="kpi-value" data-count="2">0</div>
     <div class="kpi-sub">Quote 25,2%</div>
   </div>
   <div class="kpi-card" style="--accent:var(--green)">
     <div class="kpi-label">Termine vereinbart</div>
-    <div class="kpi-value" data-count="0">0</div>
+    <div class="kpi-value" data-count="1">0</div>
     <div class="kpi-sub">7,7% der Gespräche</div>
   </div>
   <div class="kpi-card" style="--accent:var(--amber)">
@@ -587,17 +587,17 @@ const heuteData = [
   {name:"Gessica Gencarelli",team:"S+G",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Harun Ardak",team:"Privat-Wirtschaft",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:1,vkE:0,vkG:0},
   {name:"Inmaculada Ramos Martin",team:"Spanien",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
-  {name:"Isabell Lobanow",team:"Öffentlich",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
+  {name:"Isabell Lobanow",team:"Öffentlich",anrufe:1,gespräche:1,terminV:1,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Jul Köhler",team:"Privat-Wirtschaft",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
-  {name:"Julia Merkle",team:"Privat-Wirtschaft",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
+  {name:"Julia Merkle",team:"Privat-Wirtschaft",anrufe:1,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Karen von Dehn",team:"Leitung",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Kemal Can Ileri",team:"Privat-Wirtschaft",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Lidija Kelava",team:"S+G",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
-  {name:"Maria Kählig",team:"S+G",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
+  {name:"Maria Kählig",team:"S+G",anrufe:3,gespräche:1,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Mariona Belisón",team:"Spanien",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Michaela Cakan",team:"Öffentlich",anrufe:0,gespräche:0,terminV:0,terminS:1,terminG:0,vkE:0,vkG:0},
   {name:"Nicole Bentner",team:"Öffentlich",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:2,vkE:0,vkG:0},
-  {name:"Paraskevi Tzakos",team:"S+G",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
+  {name:"Paraskevi Tzakos",team:"S+G",anrufe:7,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Qendrim Zabelaj",team:"Privat-Wirtschaft",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Ramazan Cetin",team:"Öffentlich",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Ramona Cannello",team:"S+G",anrufe:0,gespräche:0,terminV:0,terminS:2,terminG:0,vkE:0,vkG:0},
@@ -622,7 +622,7 @@ const salesManagers = [
   {name:"Jul Köhler",erstellt:1,erstelltEur:3997,gewonnen:0,gewonnenEur:0,verloren:0,verlorenEur:0,pipeline:1,pipelineEur:3997,avgDeal:0,convRate:0.0,timeToConv:0.0,webinareGehalten:0,webinareFuture:5,webinareGesamt:5},
   {name:"Marco Kremer",erstellt:32,erstelltEur:157716,gewonnen:16,gewonnenEur:60566,verloren:55,verlorenEur:282897,pipeline:7,pipelineEur:36986,avgDeal:3785,convRate:22.5,timeToConv:539.6,webinareGehalten:75,webinareFuture:9,webinareGesamt:84},
   {name:"Nicole Bentner",erstellt:73,erstelltEur:177921,gewonnen:32,gewonnenEur:66080,verloren:30,verlorenEur:74254,pipeline:12,pipelineEur:38895,avgDeal:2065,convRate:51.6,timeToConv:20.0,webinareGehalten:71,webinareFuture:26,webinareGesamt:97},
-  {name:"Ramazan Cetin",erstellt:57,erstelltEur:555581,gewonnen:41,gewonnenEur:327731,verloren:10,verlorenEur:113812,pipeline:10,pipelineEur:192058,avgDeal:7993,convRate:80.4,timeToConv:22.9,webinareGehalten:34,webinareFuture:3,webinareGesamt:37},
+  {name:"Ramazan Cetin",erstellt:57,erstelltEur:555581,gewonnen:41,gewonnenEur:327731,verloren:10,verlorenEur:113812,pipeline:10,pipelineEur:192058,avgDeal:7993,convRate:80.4,timeToConv:22.9,webinareGehalten:34,webinareFuture:4,webinareGesamt:38},
   {name:"Richard Knoke",erstellt:52,erstelltEur:616935,gewonnen:11,gewonnenEur:136825,verloren:55,verlorenEur:451589,pipeline:33,pipelineEur:500721,avgDeal:12439,convRate:16.7,timeToConv:308.6,webinareGehalten:106,webinareFuture:10,webinareGesamt:116},
   {name:"Sergio Fernandez",erstellt:87,erstelltEur:164988,gewonnen:10,gewonnenEur:20800,verloren:75,verlorenEur:150388,pipeline:6,pipelineEur:0,avgDeal:2080,convRate:11.8,timeToConv:42.1,webinareGehalten:87,webinareFuture:0,webinareGesamt:87},
   {name:"Stephan Müller",erstellt:23,erstelltEur:146432,gewonnen:7,gewonnenEur:32627,verloren:4,verlorenEur:27030,pipeline:12,pipelineEur:86776,avgDeal:4661,convRate:63.6,timeToConv:20.6,webinareGehalten:37,webinareFuture:1,webinareGesamt:38},
@@ -665,12 +665,12 @@ const funnelData = [
   {name:"Harun Ardak",anrufe:1034,gespräche:311,terminV:6,terminS:6,pipeline:0,gewonnen:3000},
   {name:"Hubert Ketterer",anrufe:66,gespräche:36,terminV:0,terminS:0,pipeline:0,gewonnen:15000},
   {name:"Inmaculada Ramos Martin",anrufe:1360,gespräche:706,terminV:11,terminS:10,pipeline:0,gewonnen:2250},
-  {name:"Isabell Lobanow",anrufe:4768,gespräche:779,terminV:55,terminS:45,pipeline:2918051,gewonnen:261336},
+  {name:"Isabell Lobanow",anrufe:4769,gespräche:780,terminV:56,terminS:45,pipeline:2918051,gewonnen:261336},
   {name:"Jasmin Demir",anrufe:20,gespräche:4,terminV:0,terminS:0,pipeline:0,gewonnen:0},
-  {name:"Jasmin März",anrufe:338,gespräche:137,terminV:0,terminS:0,pipeline:11475,gewonnen:4650063},
+  {name:"Jasmin März",anrufe:338,gespräche:137,terminV:0,terminS:0,pipeline:9975,gewonnen:4650063},
   {name:"Jessica Campa",anrufe:1544,gespräche:406,terminV:2,terminS:2,pipeline:0,gewonnen:2490459},
   {name:"Jul Köhler",anrufe:3381,gespräche:420,terminV:15,terminS:10,pipeline:18247,gewonnen:2950},
-  {name:"Julia Merkle",anrufe:1643,gespräche:353,terminV:9,terminS:6,pipeline:13150,gewonnen:2150},
+  {name:"Julia Merkle",anrufe:1644,gespräche:353,terminV:9,terminS:6,pipeline:13150,gewonnen:2150},
   {name:"Karen von Dehn",anrufe:172,gespräche:45,terminV:2,terminS:2,pipeline:306934,gewonnen:6900},
   {name:"Katharina Krneta",anrufe:19,gespräche:12,terminV:0,terminS:0,pipeline:0,gewonnen:5400},
   {name:"Kemal Can Ileri",anrufe:6396,gespräche:1331,terminV:35,terminS:25,pipeline:3649325,gewonnen:915875},
@@ -680,14 +680,14 @@ const funnelData = [
   {name:"Lisa Gröber",anrufe:4,gespräche:4,terminV:0,terminS:0,pipeline:0,gewonnen:0},
   {name:"Mai-Linh Trinh",anrufe:98,gespräche:41,terminV:0,terminS:0,pipeline:500,gewonnen:3950},
   {name:"Marco Kremer",anrufe:2323,gespräche:839,terminV:8,terminS:8,pipeline:4250,gewonnen:500},
-  {name:"Maria Kählig",anrufe:3081,gespräche:938,terminV:58,terminS:51,pipeline:42710,gewonnen:30770},
+  {name:"Maria Kählig",anrufe:3084,gespräche:939,terminV:58,terminS:51,pipeline:42710,gewonnen:30770},
   {name:"Mariona Belisón",anrufe:4332,gespräche:1952,terminV:22,terminS:20,pipeline:0,gewonnen:1350},
-  {name:"Matthias Dorsch",anrufe:608,gespräche:263,terminV:0,terminS:0,pipeline:5195,gewonnen:20755},
+  {name:"Matthias Dorsch",anrufe:609,gespräche:263,terminV:0,terminS:0,pipeline:5195,gewonnen:20755},
   {name:"Michaela Cakan",anrufe:1382,gespräche:258,terminV:27,terminS:8,pipeline:1668745,gewonnen:130032},
   {name:"Murat Bahce",anrufe:985,gespräche:212,terminV:2,terminS:2,pipeline:0,gewonnen:0},
   {name:"Nelli Gajdamak",anrufe:773,gespräche:165,terminV:1,terminS:1,pipeline:0,gewonnen:0},
   {name:"Nicole Bentner",anrufe:1198,gespräche:366,terminV:16,terminS:16,pipeline:248338,gewonnen:3478787},
-  {name:"Paraskevi Tzakos",anrufe:4157,gespräche:947,terminV:38,terminS:32,pipeline:129675,gewonnen:12200},
+  {name:"Paraskevi Tzakos",anrufe:4164,gespräche:947,terminV:38,terminS:32,pipeline:129675,gewonnen:12200},
   {name:"Patrick Hauber",anrufe:441,gespräche:202,terminV:0,terminS:0,pipeline:1700,gewonnen:7094},
   {name:"Paulina Weidenbach",anrufe:112,gespräche:39,terminV:0,terminS:0,pipeline:0,gewonnen:745},
   {name:"Qendrim Zabelaj",anrufe:5392,gespräche:1137,terminV:24,terminS:14,pipeline:8560998,gewonnen:0},

@@ -353,7 +353,7 @@ tbody td.zero { color:var(--text3); }
   </div>
   <div class="header-meta">
     <div class="header-badge">13. Oktober 2026</div>
-    <div class="header-badge"><span class="sync-dot"></span>Sync 15:35</div>
+    <div class="header-badge"><span class="sync-dot"></span>Sync 16:05</div>
   </div>
 </header>
 
@@ -361,17 +361,17 @@ tbody td.zero { color:var(--text3); }
 <div class="kpi-strip">
   <div class="kpi-card" style="--accent:var(--cyan)">
     <div class="kpi-label">Anrufe heute</div>
-    <div class="kpi-value" data-count="751">0</div>
+    <div class="kpi-value" data-count="753">0</div>
     <div class="kpi-sub">Team gesamt</div>
   </div>
   <div class="kpi-card" style="--accent:var(--orange)">
     <div class="kpi-label">Gespräche</div>
-    <div class="kpi-value" data-count="188">0</div>
+    <div class="kpi-value" data-count="189">0</div>
     <div class="kpi-sub">Quote 25,2%</div>
   </div>
   <div class="kpi-card" style="--accent:var(--green)">
     <div class="kpi-label">Termine vereinbart</div>
-    <div class="kpi-value" data-count="7">0</div>
+    <div class="kpi-value" data-count="8">0</div>
     <div class="kpi-sub">7,7% der Gespräche</div>
   </div>
   <div class="kpi-card" style="--accent:var(--amber)">
@@ -386,7 +386,7 @@ tbody td.zero { color:var(--text3); }
   </div>
   <div class="kpi-card" style="--accent:var(--orange)">
     <div class="kpi-label">VK erstellt</div>
-    <div class="kpi-value" data-count="1">0</div>
+    <div class="kpi-value" data-count="2">0</div>
     <div class="kpi-sub">Verkaufschancen</div>
   </div>
   <div class="kpi-card" style="--accent:var(--green)">
@@ -574,10 +574,10 @@ tbody td.zero { color:var(--text3); }
 
 const heuteData = [
   {name:"Alexander Glünkin",team:"Öffentlich",anrufe:24,gespräche:7,terminV:1,terminS:1,terminG:0,vkE:0,vkG:0},
-  {name:"Annegret Bieling",team:"S+G",anrufe:67,gespräche:13,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
+  {name:"Annegret Bieling",team:"S+G",anrufe:67,gespräche:13,terminV:1,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Benjamin König",team:"Öffentlich",anrufe:20,gespräche:4,terminV:0,terminS:0,terminG:2,vkE:1,vkG:0},
   {name:"Berfin Özdem",team:"Öffentlich",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
-  {name:"Carla León",team:"Spanien",anrufe:24,gespräche:15,terminV:1,terminS:1,terminG:0,vkE:0,vkG:0},
+  {name:"Carla León",team:"Spanien",anrufe:26,gespräche:16,terminV:1,terminS:1,terminG:0,vkE:0,vkG:0},
   {name:"David Palma",team:"Privat-Wirtschaft",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Denise Rom",team:"Privat-Wirtschaft",anrufe:8,gespräche:4,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Dorothea Rütter",team:"Hochschule",anrufe:26,gespräche:4,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
@@ -603,7 +603,7 @@ const heuteData = [
   {name:"Rebeca Mora",team:"Spanien",anrufe:64,gespräche:35,terminV:0,terminS:1,terminG:0,vkE:0,vkG:0},
   {name:"Richard Knoke",team:"S+G",anrufe:11,gespräche:4,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Rrezarte Hasani",team:"S+G",anrufe:12,gespräche:4,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
-  {name:"Sergio Fernandez",team:"Spanien",anrufe:2,gespräche:2,terminV:0,terminS:0,terminG:2,vkE:0,vkG:0},
+  {name:"Sergio Fernandez",team:"Spanien",anrufe:2,gespräche:2,terminV:0,terminS:0,terminG:2,vkE:1,vkG:0},
   {name:"Stephan Müller",team:"Privat-Wirtschaft",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
   {name:"Volker Jahn",team:"S+G",anrufe:0,gespräche:0,terminV:0,terminS:0,terminG:1,vkE:0,vkG:0},
   {name:"Yasemin Halici",team:"Privat-Wirtschaft",anrufe:9,gespräche:1,terminV:0,terminS:0,terminG:0,vkE:0,vkG:0},
@@ -623,8 +623,8 @@ const salesManagers = [
   {name:"Marco Kremer",erstellt:32,erstelltEur:157716,gewonnen:16,gewonnenEur:60566,verloren:57,verlorenEur:290397,pipeline:6,pipelineEur:31986,avgDeal:3785,convRate:21.9,timeToConv:539.6,webinareGehalten:72,webinareFuture:1,webinareGesamt:73},
   {name:"Nicole Bentner",erstellt:91,erstelltEur:237385,gewonnen:39,gewonnenEur:84689,verloren:40,verlorenEur:105213,pipeline:13,pipelineEur:48791,avgDeal:2172,convRate:49.4,timeToConv:20.9,webinareGehalten:90,webinareFuture:16,webinareGesamt:106},
   {name:"Ramazan Cetin",erstellt:64,erstelltEur:627227,gewonnen:43,gewonnenEur:345442,verloren:12,verlorenEur:234192,pipeline:13,pipelineEur:125614,avgDeal:8034,convRate:78.2,timeToConv:25.1,webinareGehalten:41,webinareFuture:15,webinareGesamt:56},
-  {name:"Richard Knoke",erstellt:67,erstelltEur:698250,gewonnen:14,gewonnenEur:179732,verloren:61,verlorenEur:526539,pipeline:41,pipelineEur:512396,avgDeal:12838,convRate:18.7,timeToConv:280.4,webinareGehalten:130,webinareFuture:15,webinareGesamt:145},
-  {name:"Sergio Fernandez",erstellt:96,erstelltEur:168342,gewonnen:11,gewonnenEur:22204,verloren:80,verlorenEur:150388,pipeline:9,pipelineEur:1950,avgDeal:2019,convRate:12.1,timeToConv:38.4,webinareGehalten:97,webinareFuture:1,webinareGesamt:98},
+  {name:"Richard Knoke",erstellt:67,erstelltEur:698250,gewonnen:14,gewonnenEur:179732,verloren:61,verlorenEur:526539,pipeline:41,pipelineEur:512396,avgDeal:12838,convRate:18.7,timeToConv:280.4,webinareGehalten:130,webinareFuture:16,webinareGesamt:146},
+  {name:"Sergio Fernandez",erstellt:97,erstelltEur:168342,gewonnen:11,gewonnenEur:22204,verloren:80,verlorenEur:150388,pipeline:10,pipelineEur:1950,avgDeal:2019,convRate:12.1,timeToConv:38.4,webinareGehalten:97,webinareFuture:1,webinareGesamt:98},
   {name:"Stephan Müller",erstellt:13,erstelltEur:90406,gewonnen:7,gewonnenEur:32627,verloren:6,verlorenEur:57780,pipeline:0,pipelineEur:0,avgDeal:4661,convRate:53.8,timeToConv:20.6,webinareGehalten:32,webinareFuture:0,webinareGesamt:32},
   {name:"Volker Jahn",erstellt:25,erstelltEur:407695,gewonnen:10,gewonnenEur:84270,verloren:35,verlorenEur:382095,pipeline:19,pipelineEur:243925,avgDeal:8427,convRate:22.2,timeToConv:344.3,webinareGehalten:81,webinareFuture:11,webinareGesamt:92}
 ];
@@ -635,7 +635,7 @@ const funnelData = [
   {name:"Alexa Hohaus",anrufe:298,gespräche:132,terminV:0,terminS:0,pipeline:0,gewonnen:406921},
   {name:"Alexander Eisele",anrufe:288,gespräche:127,terminV:0,terminS:0,pipeline:1750,gewonnen:270875},
   {name:"Alexander Glünkin",anrufe:2413,gespräche:530,terminV:55,terminS:39,pipeline:9622966,gewonnen:27062921},
-  {name:"Annegret Bieling",anrufe:8324,gespräche:2019,terminV:97,terminS:78,pipeline:125730,gewonnen:91356},
+  {name:"Annegret Bieling",anrufe:8324,gespräche:2019,terminV:98,terminS:78,pipeline:125730,gewonnen:91356},
   {name:"Antonia Cervone",anrufe:293,gespräche:115,terminV:0,terminS:0,pipeline:0,gewonnen:3935},
   {name:"Antonietta Bochicchio-Muratore",anrufe:3630,gespräche:721,terminV:0,terminS:0,pipeline:0,gewonnen:0},
   {name:"Aylin Dursun",anrufe:2266,gespräche:388,terminV:22,terminS:18,pipeline:11086,gewonnen:2550},
@@ -643,7 +643,7 @@ const funnelData = [
   {name:"Berfin Özdem",anrufe:3833,gespräche:860,terminV:63,terminS:53,pipeline:2040,gewonnen:7843945},
   {name:"Bernice Welens",anrufe:140,gespräche:62,terminV:0,terminS:0,pipeline:0,gewonnen:1350},
   {name:"Britta Grimm",anrufe:3085,gespräche:476,terminV:24,terminS:24,pipeline:209085,gewonnen:8056},
-  {name:"Carla León",anrufe:6487,gespräche:3125,terminV:40,terminS:38,pipeline:0,gewonnen:5950},
+  {name:"Carla León",anrufe:6489,gespräche:3126,terminV:40,terminS:38,pipeline:0,gewonnen:5950},
   {name:"Carlo Pinto",anrufe:687,gespräche:284,terminV:0,terminS:0,pipeline:12500,gewonnen:21640},
   {name:"Carsten Hoermann",anrufe:11,gespräche:10,terminV:0,terminS:0,pipeline:1250,gewonnen:0},
   {name:"Christina Fox",anrufe:273,gespräche:96,terminV:0,terminS:0,pipeline:7500,gewonnen:4900},

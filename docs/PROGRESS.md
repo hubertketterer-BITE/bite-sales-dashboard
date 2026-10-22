@@ -1,5 +1,26 @@
 # Progress
 
+## 2026-10-22
+
+### Live-Dashboard eingefroren seit 21.10. 09:05 — Railway-Plattformausfall (extern)
+
+**Symptom:** Live-Dashboard alt (`last-modified: Wed, 21 Oct 2026 07:05:05 GMT`), Master-Sheet + GitHub aber frisch (Auto-Sync alle 30 Min).
+
+**Ursache (extern, Railway):** Laut status.railway.com seit 21.10. 07:24 UTC Plattformausfall + Security-Incident (Disclosure 21.10.). Builds/Deploys plattformweit pausiert, Freigabe gestaffelt (Enterprise → Pro → Hobby → Free/Trial). Am 22.10. 04:17 UTC **alle Railway-API-Tokens invalidiert** → `Invalid RAILWAY_TOKEN`.
+
+**Maßnahmen:**
+- Neuer Project Token (pretty-kindness / production) vom User angelegt und in VPS-`.env` eingetragen. `railway status` auf VPS ok.
+- Handlauf `./sync.sh` auf VPS 09:49: Sheet → Commit `81bbe51` → Push ok → `railway up` scheitert mit `Deploys have been paused due to an upstream issue`.
+- Kein Code-Fix nötig. Jeder VPS-Cron (`:05/:35`) versucht `railway up` erneut → Dashboard zieht automatisch nach, sobald Railway Deploys für unseren Plan freigibt.
+
+**Offen:**
+- Lokale Crontab läuft wieder parallel zum VPS (Master-Sync `*/30` + `@reboot`, `sync.sh` `5,35`) → Doppel-Writes ins Sheet, lokale Pushes dauerhaft rejected (387× im `logs/cron.log`). Auskommentieren durch User (Auto-Mode blockte `crontab`-Änderung).
+- Lokale `.env` hat noch alten, ungültigen Token (nur für manuelle Deploys relevant).
+- Neuen Railway-Token rotieren (wurde im Chat geteilt).
+- SSH zum VPS von lokal aktuell nicht erreichbar → prüfen.
+- Railway-Empfehlung: in Railway gespeicherte Env-Variablen rotieren.
+- `server.py`: HEAD-Requests auf Auth-Prüfung prüfen.
+
 ## 2026-06-25
 
 ### Live-Dashboard eingefroren — VPS-Push dauerhaft rejected (Deploy-Schicht)

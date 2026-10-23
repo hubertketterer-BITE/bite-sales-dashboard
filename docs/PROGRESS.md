@@ -1,5 +1,14 @@
 # Progress
 
+## 2026-10-23
+
+### Railway-Vorfall erledigt + lokale Crontab bereinigt
+
+- **Live wieder aktuell:** `last-modified: Fri, 23 Oct 2026 07:35:06 GMT` = Auto-Sync `7d26d61` (09:35). Railway hat Deploys freigegeben, VPS-Cron hat ohne Eingriff nachgezogen. Stillstand insgesamt 21.10. 09:05 → 23.10. 09:35.
+- **Lokale Crontab:** Master-Sync (`*/30 8-17`, `@reboot`) und `sync.sh` (`5,35 8-17`) auskommentiert mit Präfix `# DISABLED 2026-10-23 (runs on VPS):`. TEAM-ÖD-Jobs unverändert aktiv. Damit nur noch VPS als Schreiber für Master-Sheet + Dashboard.
+
+**Weiter offen:** Railway-Token rotieren, Railway-Env-Variablen erneuern, lokale `.env`-Token aktualisieren, SSH zum VPS prüfen, HEAD-Requests in `server.py` auf Auth-Prüfung prüfen.
+
 ## 2026-10-22
 
 ### Live-Dashboard eingefroren seit 21.10. 09:05 — Railway-Plattformausfall (extern)
